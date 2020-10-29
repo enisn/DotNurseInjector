@@ -53,25 +53,27 @@ services.AddServicesFrom("MyCompany.ProjectName.Repositories.Concrete"); // <-- 
 
 ***
 
+<img src="https://raw.githubusercontent.com/enisn/DotNurseInjector/main/art/dotnurse-github.png" alt="dotnurse-injector-social-preview" />
+
 ***
 
-## Customizations
+# Customizations
 
 DotNurse meets your custom requirements such as a defining lifetime, injecting into different interfaces etc.
 
 ***
 
-### Managing from Startup
+## Managing from Startup
 
 .Nurse provides fluent api to manage your injections from single point.
 
-#### Service Lifetime
+### Service Lifetime
 
 ```csharp
 services.AddServicesFrom("MyCompany.ProjectName.Services", ServiceLifetime.Scoped);
 ```
 
-#### Interface Selector
+### Interface Selector
 You can define a pattern to choose interface from multiple interfaces.
 
 ```csharp
@@ -81,7 +83,7 @@ services.AddServicesFrom("ProjectNamespace.Services", ServiceLifetime.Scoped, op
 });
 ```
 
-#### Implementation Selector
+### Implementation Selector
 You can define a pattern to choose which objects will be injected into IoC. For example you have a base type in same namespace and you don't want to add it into service collection. You can use this feature:
 
 - ProjectNamespace.Services
@@ -97,7 +99,7 @@ services.AddServicesFrom("ProjectNamespace.Services", ServiceLifetime.Scoped, op
 });
 ```
 
-#### Implementation Base
+### Implementation Base
 Think about same scenario like previous, you can choose a base type to inject all classes which is inhetired from.
 
 ```csharp
@@ -107,7 +109,7 @@ services.AddServicesFrom("ProjectNamespace.Services", ServiceLifetime.Scoped, op
 });
 ```
 
-#### Adding Without Interface
+### Adding Without Interface
 You may want to use directly objects sometimes, if an abstraction has multiple implmentations. Then you can use `AddWithoutInterfaceToo` options as **true**.
 If you set this option as true, object will be added into services without interface too, like following:
 
@@ -130,11 +132,11 @@ services.AddScoped<AuthorService>(); // <-- Also for each pattern matched object
 
 *** 
 
-### Managing from Objects
+## Managing from Objects
 
 You can manage your injections for class by class.
 
-#### Service Lifetime Attribute
+### Service Lifetime Attribute
 
 ```csharp
 [ServiceLifeTime(ServiceLifetime.Singleton)] // <-- Only this object will be Singleton.
@@ -144,7 +146,7 @@ public class MyRepository : IMyRepository
 }
 ```
 
-#### Ignore Injection Attribute
+### Ignore Injection Attribute
 You can ignore some of your class from injector.
 
 ```csharp
@@ -155,14 +157,12 @@ public class MyRepository : IMyRepository
 }
 ```
 
-#### Inject As Attribute
+### Inject As Attribute
 You can manage your service types to add into.
 
 ```csharp
-/* Following object will be added into given types.
- * services.AddTransient<IBookRepository, BookRepository>();
- * services.AddScoped<IBaseRepository<Book>, BookRepository>();
- * services.AddSingleton<BookRepository>();
+/* 
+ * Following object will be added into given types.
  */
 [InjectAs(typeof(IBookRepository))]
 [InjectAs(typeof(IBaseRepository<Book>), ServiceLifetime.Scoped)]
