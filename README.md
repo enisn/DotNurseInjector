@@ -150,7 +150,7 @@ public class MyRepository : IMyRepository
 You can ignore some of your class from injector.
 
 ```csharp
-[IgnoreInjection] // <-- Only this object will be Singleton.
+[IgnoreInjection] // <-- This object will not be added to services
 public class MyRepository : IMyRepository
 {
     // ...
