@@ -13,8 +13,8 @@ namespace Microsoft.AspNetCore.Mvc
     public static class Startup
     {
         public static IServiceCollection AddServicesFrom(this IServiceCollection services,
-                                                            string @namespace, 
-                                                            ServiceLifetime defaultLifetime = ServiceLifetime.Scoped, 
+                                                            string @namespace,
+                                                            ServiceLifetime defaultLifetime = ServiceLifetime.Scoped,
                                                             Action<DotNurseInjectorOptions> configAction = null)
         {
             var options = new DotNurseInjectorOptions();
@@ -52,10 +52,12 @@ namespace Microsoft.AspNetCore.Mvc
 
                 if (interfaces.Length > 1)
                 {
-                    var inheritFrom = type.GetCustomAttribute<InjectAsAttribute>()?.TypeToInjectAs 
-                                                    ?? options.SelectInterface(interfaces);
-
-                    services.Add(new ServiceDescriptor(inheritFrom, type, lifetime));
+                    var injectAsAttributes = type.GetCustomAttributes<InjectAsAttribute>().ToArray();
+                    if (injectAsAttributes?.Length > 0)
+                        foreach (var injectAsAttribute in injectAsAttributes)
+                            services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? lifetime));
+                    else
+                        services.Add(new ServiceDescriptor(options.SelectInterface(interfaces), type, lifetime));
 
                     continue;
                 }
