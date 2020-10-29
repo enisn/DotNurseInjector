@@ -21,15 +21,18 @@
 
 - Go your **Startup.cs**, remove all your manual injections and use `AddServicesFrom()` method with namespace.
 
+  - If you have following pattern:
 ```csharp
 
 services.AddTransient<IBookRepository, BookRepository>();
 services.AddTransient<IAuthorRepository, AuthorRepository>();
 services.AddTransient<IPublisherRepository, PublisherRepository>();
 //...
+```
+  
+  - Replace them with following:
 
-/* REPLACE THEM WITH FOLLOWING: */
-
+```csharp
 services.AddServicesFrom("MyCompany.ProjectName.Repositories.Concrete"); // <-- Your implementations namespace.
 
 ```
