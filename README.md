@@ -158,7 +158,7 @@ public class MyRepository : IMyRepository
 ```
 
 ### Inject As Attribute
-You can manage your service types to add into.
+You can manage your service types to add into. This attribute can be used multiple time at once.
 
 ```csharp
 /* 
@@ -176,6 +176,6 @@ This injection will do following code:
 
 ```csharp
 services.AddTransient<IBookRepository, BookRepository>();
-services.AddTransient<IBaseRepository<Book>>, BookRepository>();
-services.AddTransient<BookRepository>();
+services.AddScoped<IBaseRepository<Book>>, BookRepository>();
+services.AddSingleton<BookRepository>();
 ```
