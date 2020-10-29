@@ -89,8 +89,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 return assembly.GetTypes().Where(x => x.Namespace == @namespace && !x.IsAbstract && x.IsClass);
             }
 
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith(@namespace.Split('.').FirstOrDefault())).ToList();
-
+            var assemblies = GetAssembliesToSearchFor().Where(x => x.FullName.StartsWith(@namespace.Split('.').FirstOrDefault())).ToList();
+            
             return assemblies.SelectMany(s => s.GetTypes()).Where(x => x.Namespace == @namespace && !x.IsNested && x.IsClass && !x.IsAbstract);
         }
 
@@ -100,8 +100,16 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 return assembly.GetTypes().Where(x => x.GetCustomAttribute<T>() != null);
             }
+            return GetAssembliesToSearchFor().SelectMany(sm => sm.GetTypes()).Where(x => x.GetCustomAttribute<T>() != null);
+        }
 
-            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(sm => sm.GetTypes()).Where(x => x.GetCustomAttribute<T>() != null);
+        private static IEnumerable<Assembly> GetAssembliesToSearchFor()
+        {
+            return Assembly
+                    .GetEntryAssembly()
+                    .GetReferencedAssemblies()
+                    .Select(s => Assembly.Load(s.ToString()))
+                    .Concat(new[] { Assembly.GetEntryAssembly() });
         }
     }
 }
