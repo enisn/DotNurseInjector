@@ -77,9 +77,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs,type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
                 }
-            {
-                
-            }
             return services;
         }
         private static IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null)
