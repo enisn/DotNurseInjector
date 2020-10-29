@@ -147,12 +147,12 @@ You can manage your service types to add into.
 ```csharp
 /* Following object will be added into given types.
  * services.AddTransient<IBookRepository, BookRepository>();
- * services.AddTransient<IBaseRepository<Book>, BookRepository>();
- * services.AddTransient<BookRepository>();
+ * services.AddScoped<IBaseRepository<Book>, BookRepository>();
+ * services.AddSingleton<BookRepository>();
  */
 [InjectAs(typeof(IBookRepository))]
-[InjectAs(typeof(IBaseRepository<Book>))]
-[InjectAs(typeof(BookRepository))]
+[InjectAs(typeof(IBaseRepository<Book>), ServiceLifetime.Scoped)]
+[InjectAs(typeof(BookRepository), ServiceLifetime.Singleton)]
 public class BookRepository : IBookRepository
 {
     // ...
