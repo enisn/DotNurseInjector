@@ -53,7 +53,7 @@ services.AddServicesFrom("MyCompany.ProjectName.Repositories.Concrete"); // <-- 
 
 ***
 
-<img src="https://raw.githubusercontent.com/enisn/DotNurseInjector/main/art/dotnurse-github.png" alt="dotnurse-injector-social-preview" />
+<img src="https://raw.githubusercontent.com/enisn/DotNurseInjector/master/art/dotnurse-github.png" alt="dotnurse-injector-social-preview" />
 
 ***
 
