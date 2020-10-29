@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNurse.Injector", "src\DotNurse.Injector\DotNurse.Injector.csproj", "{896BD1D9-3F7A-41CE-8786-2D9768D5AA06}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8A68FD90-4A34-452A-B454-28972288AA04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNurse.Injector.Tests", "tests\DotNurse.Injector.Tests\DotNurse.Injector.Tests.csproj", "{C3384935-BC39-47B1-B399-ED97EF47EFDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,12 +28,17 @@ Global
 		{896BD1D9-3F7A-41CE-8786-2D9768D5AA06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{896BD1D9-3F7A-41CE-8786-2D9768D5AA06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{896BD1D9-3F7A-41CE-8786-2D9768D5AA06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3384935-BC39-47B1-B399-ED97EF47EFDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3384935-BC39-47B1-B399-ED97EF47EFDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3384935-BC39-47B1-B399-ED97EF47EFDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3384935-BC39-47B1-B399-ED97EF47EFDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{896BD1D9-3F7A-41CE-8786-2D9768D5AA06} = {9B78944B-4ECE-439B-A987-2591D6B1F728}
+		{C3384935-BC39-47B1-B399-ED97EF47EFDD} = {8A68FD90-4A34-452A-B454-28972288AA04}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {75503A2F-DC31-4EB0-922A-B36B1E2492F6}
