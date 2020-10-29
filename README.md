@@ -88,7 +88,7 @@ You can define a pattern to choose which objects will be injected into IoC. For 
 
 - ProjectNamespace.Services
   - BookService
-  - BaseService  <- You want to ignore this
+  - ~~BaseService~~  <- You want to ignore this
   - AuthorService
   - ...
  
@@ -172,4 +172,10 @@ public class BookRepository : IBookRepository
     // ...
 }
 ```
+This injection will do following code:
+
+```csharp
+services.AddTransient<IBookRepository, BookRepository>();
+services.AddTransient<IBaseRepository<Book>>, BookRepository>();
+services.AddTransient<BookRepository>();
 ```
