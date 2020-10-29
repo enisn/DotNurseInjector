@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddServicesFrom(this IServiceCollection services,
                                                             string @namespace,
-                                                            ServiceLifetime defaultLifetime = ServiceLifetime.Scoped,
+                                                            ServiceLifetime defaultLifetime = ServiceLifetime.Transient,
                                                             Action<DotNurseInjectorOptions> configAction = null)
         {
             var options = new DotNurseInjectorOptions();
