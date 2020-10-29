@@ -25,6 +25,11 @@ namespace DotNurse.Injector.Attributes
             this.TypeToInjectAs = typeToInjectAs;
         }
 
+        public InjectAsAttribute(Type typeToInjectAs, ServiceLifetime serviceLifetime) : this(typeToInjectAs)
+        {
+            this.ServiceLifetime = serviceLifetime;
+        }
+
         public Type TypeToInjectAs { get; set; }
 
         /// <summary>

@@ -51,19 +51,37 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 if (interfaces.Length > 1)
                 {
-                    var injectAsAttributes = type.GetCustomAttributes<InjectAsAttribute>().ToArray();
-                    if (injectAsAttributes?.Length > 0)
-                        foreach (var injectAsAttribute in injectAsAttributes)
-                            services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? lifetime));
-                    else
-                        services.Add(new ServiceDescriptor(options.SelectInterface(interfaces), type, lifetime));
-
+                    services.Add(new ServiceDescriptor(options.SelectInterface(interfaces), type, lifetime));
                     continue;
                 }
+
+                var injectAsAttributes = type.GetCustomAttributes<InjectAsAttribute>().ToArray();
+                if (injectAsAttributes?.Length > 0)
+                    foreach (var injectAsAttribute in injectAsAttributes)
+                        services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? lifetime));
             }
             return services;
         }
 
+        /// <summary>
+        /// Adds only services which is marked with [<see cref="InjectAsAttribute"/>] attribute.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddServicesByAttributes(this IServiceCollection services, ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient)
+        {
+            var types = FindTypesWithAttribute<InjectAsAttribute>();
+
+            foreach (var type in types)
+                foreach (var injectAsAttribute in type.GetCustomAttributes<InjectAsAttribute>())
+                {
+                    services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs,type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
+                }
+            {
+                
+            }
+            return services;
+        }
         private static IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null)
         {
             if (assembly != null)
@@ -74,6 +92,16 @@ namespace Microsoft.Extensions.DependencyInjection
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith(@namespace.Split('.').FirstOrDefault())).ToList();
 
             return assemblies.SelectMany(s => s.GetTypes()).Where(x => x.Namespace == @namespace && !x.IsNested && x.IsClass && !x.IsAbstract);
+        }
+
+        private static IEnumerable<Type> FindTypesWithAttribute<T>(Assembly assembly = null) where T : Attribute
+        {
+            if (assembly == null)
+            {
+                return assembly.GetTypes().Where(x => x.GetCustomAttribute<T>() != null);
+            }
+
+            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(sm => sm.GetTypes()).Where(x => x.GetCustomAttribute<T>() != null);
         }
     }
 }
