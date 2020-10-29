@@ -28,7 +28,7 @@
 
 ## Getting Started
 
-- Install Nuget package
+- Install Nuget package [from here](https://www.nuget.org/packages/DotNurse.Injector/).
 
 - Go your **Startup.cs**, remove all your manual injections and use `AddServicesFrom()` method with namespace.
 
