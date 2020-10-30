@@ -1,11 +1,27 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>enisn</Authors>
+    <Description>.Nurse Injector is auto dependency injector for .Net, makes your code clean &amp; more manageable dependencies.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>dotnurse-icon.png</PackageIcon>
+    <PackageTags>dotnet,dotnetcore,dependency,dependency injection,dependency injection,service lifetime,IoC,</PackageTags>
+    <PackageReleaseNotes>Fix referenced assembly locationing</PackageReleaseNotes>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <PackageVersion>1.2.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\art\dotnurse-icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
