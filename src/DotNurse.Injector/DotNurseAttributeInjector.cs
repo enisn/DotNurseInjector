@@ -10,16 +10,11 @@ namespace DotNurse.Injector
 {
     public class DotNurseAttributeInjector : IAttributeInjector
     {
-        public DotNurseAttributeInjector()
-        {
-        }
-
         public void InjectIntoMembers(object instance, IServiceProvider serviceProvider)
         {
-            var members = instance.GetType().GetMembers().Where(x => x.IsDefined(typeof(DotNurseInjectAttribute)));
+            var members = instance.GetType().GetMembers().Where(x => x.IsDefined(typeof(InjectServiceAttribute)));
             foreach (var member in members)
             {
-
                 if (member is PropertyInfo propertyInfo)
                 {
                     var injectedInstance = serviceProvider.GetService(propertyInfo.PropertyType);
