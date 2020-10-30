@@ -11,6 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class Startup
     {
+        private static bool didInitialized;
         public static IServiceCollection AddServicesFrom(this IServiceCollection services,
                                                             string @namespace,
                                                             ServiceLifetime defaultLifetime = ServiceLifetime.Transient,
@@ -60,7 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     foreach (var injectAsAttribute in injectAsAttributes)
                         services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? lifetime));
             }
-            return services;
+            return services.AddDotNurseInjector();
         }
 
         /// <summary>
@@ -75,10 +76,22 @@ namespace Microsoft.Extensions.DependencyInjection
             foreach (var type in types)
                 foreach (var injectAsAttribute in type.GetCustomAttributes<InjectAsAttribute>())
                 {
-                    services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs,type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
+                    services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
                 }
+            return services.AddDotNurseInjector();
+        }
+
+        public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
+        {
+            if (!didInitialized)
+            {
+                services.AddSingleton<IAttributeInjector, DotNurseAttributeInjector>();
+                didInitialized = true;
+            }
+
             return services;
         }
+
         private static IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null)
         {
             if (assembly != null)
@@ -87,7 +100,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             var assemblies = GetAssembliesToSearchFor().Where(x => x.FullName.StartsWith(@namespace.Split('.').FirstOrDefault())).ToList();
-            
+
             return assemblies.SelectMany(s => s.GetTypes()).Where(x => x.Namespace == @namespace && !x.IsNested && x.IsClass && !x.IsAbstract);
         }
 
