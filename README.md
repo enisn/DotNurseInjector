@@ -12,14 +12,14 @@
 </tr>
 </table>
 
+
+![.NET Core](https://github.com/enisn/DotNurseInjector/workflows/.NET%20Core/badge.svg)
 <a href="https://www.nuget.org/packages/DotNurse.Injector/">
     <img alt="Nuget" src="https://img.shields.io/nuget/v/DotNurse.Injector?logo=nuget&style=flat-square">
 </a>
-
 <a href="https://www.codefactor.io/repository/github/enisn/dotnurseinjector">
 <img src="https://www.codefactor.io/repository/github/enisn/dotnurseinjector/badge" alt="CodeFactor" />
 </a>
-
 <a href="https://gitmoji.carloscuesta.me">
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
 </a>
