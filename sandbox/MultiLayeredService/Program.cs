@@ -18,7 +18,7 @@ namespace MultiLayeredService
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseServiceProviderFactory<DotNurse.Injector.DotNurseServiceProvider>(new DotNurse.Injector.DotNurseServiceProviderFactory())
+                .UseDotNurseInjector()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

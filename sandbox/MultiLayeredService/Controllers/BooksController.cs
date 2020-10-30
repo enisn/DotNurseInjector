@@ -14,7 +14,8 @@ namespace MultiLayeredService.Controllers
     [Route("api/[controller]")]
     public class BooksController : ControllerBase
     {
-        [DotNurseInject] public IBookRepository BookRepository { get; set; }
+        [InjectService] public IBookRepository bookRepository;
+        [InjectService] public IBookRepository BookRepository { get; set; }
 
         [HttpGet]
         public IActionResult Get()

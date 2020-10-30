@@ -18,29 +18,6 @@ using System.Threading.Tasks;
 
 namespace MultiLayeredService
 {
-    public class MyControllerFactory : IControllerFactory
-    {
-        private readonly IControllerActivator controllerActivator;
-        private readonly IAttributeInjector attributeInjector;
-
-        public MyControllerFactory(IControllerActivator controllerActivator, IAttributeInjector attributeInjector)
-        {
-            this.controllerActivator = controllerActivator;
-            this.attributeInjector = attributeInjector;
-        }
-
-        public object CreateController(ControllerContext context)
-        {
-            var controller = controllerActivator.Create(context);
-            attributeInjector.InjectIntoMembers(controller, context.HttpContext.RequestServices);
-            return controller;
-        }
-
-        public void ReleaseController(ControllerContext context, object controller)
-        {
-            controllerActivator.Release(context, controller);
-        }
-    }
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -60,8 +37,6 @@ namespace MultiLayeredService
             });
 
             services.AddServicesFrom("MultiLayeredService.Repositories.Concrete");
-
-            services.AddSingleton<IControllerFactory, MyControllerFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
