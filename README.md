@@ -13,7 +13,7 @@
 </table>
 
 <a href="https://www.nuget.org/packages/DotNurse.Injector/">
-    <img alt="Nuget" src="https://img.shields.io/nuget/v/DotNurse.Injector?logo=nuget&style=flat-square">
+    <img alt="Nuget" src="https://img.shields.io/nuget/v/DotNurse.Injector.AspNetCore?logo=nuget&style=flat-square">
 </a>
 
 <a href="https://www.codefactor.io/repository/github/enisn/dotnurseinjector">
@@ -28,7 +28,7 @@
 
 ## Getting Started
 
-- Install Nuget package [from here](https://www.nuget.org/packages/DotNurse.Injector/).
+- Install Nuget package [from here](https://www.nuget.org/packages/DotNurse.Injector.AspNetCore/).
 
 - Go your **Startup.cs**, remove all your manual injections and use `AddServicesFrom()` method with namespace.
 
