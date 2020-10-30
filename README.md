@@ -53,6 +53,40 @@ services.AddServicesFrom("MyCompany.ProjectName.Repositories.Concrete"); // <-- 
 
 ***
 
+## Attribute Injection
+> This section is **optional**. You can still use default Microsoft Dependency Injection and skip this step.
+
+You can use attribute injection instead of constructor injection. Using `[InjectService]` attribute for properties of fields is enough to inject them from IoC.
+
+### Setting Up
+
+You must replace your Service Provider with .Nurse Injecor to use **Attribute Injection**.
+
+- Go your **Program.cs** and add `UseDotNurseInjector()` method to IHostBuilder.
+
+```csharp
+ public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseDotNurseInjector() // <-- Adding this one is enough!
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+```
+
+
+### Usage
+```csharp
+[InjectService] public IBookRepository BookRepository { get; set; }
+```
+
+```csharp
+[InjectService] public IBookRepository bookRepository;
+```
+
+
+***
+
 <img src="https://raw.githubusercontent.com/enisn/DotNurseInjector/master/art/dotnurse-github.png" alt="dotnurse-injector-social-preview" />
 
 ***
