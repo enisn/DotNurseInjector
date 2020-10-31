@@ -191,16 +191,16 @@ public class MyRepository : IMyRepository
 }
 ```
 
-### Inject As Attribute
+### Register As Attribute
 You can manage your service types to add into. This attribute can be used multiple time at once.
 
 ```csharp
 /* 
  * Following object will be added into given types.
  */
-[InjectAs(typeof(IBookRepository))]
-[InjectAs(typeof(IBaseRepository<Book>), ServiceLifetime.Scoped)]
-[InjectAs(typeof(BookRepository), ServiceLifetime.Singleton)]
+[RegisterAs(typeof(IBookRepository))]
+[RegisterAs(typeof(IBaseRepository<Book>), ServiceLifetime.Scoped)]
+[RegisterAs(typeof(BookRepository), ServiceLifetime.Singleton)]
 public class BookRepository : IBookRepository
 {
     // ...
