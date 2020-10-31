@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using DotNurse.Injector.Tests.Environment.NamespaceMultiple;
+using DotNurse.Injector.Tests.Environment.NamespaceAttributes;
 
 namespace DotNurse.Injector.Tests
 {
@@ -71,6 +72,24 @@ namespace DotNurse.Injector.Tests
                 Assert.Contains(expected, a => a == serviceDescriptor.ImplementationType);
 
             Assert.DoesNotContain(services, a => a.ServiceType == typeof(IVehicle));
+        }
+
+        [Fact]
+        public void AddServicesFrom_ShouldAddCorrectCount_WithMultipleAttribute()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var @namespace = "DotNurse.Injector.Tests.Environment.NamespaceAttributes";
+
+            var expected = new [] { typeof(IComputer), typeof(ILaptop), typeof(MyLaptop) };
+
+            // Act
+            services.AddServicesFrom(@namespace);
+
+            // Assert
+            Assert.Equal(expected.Length, services.Count);
+            foreach (var serviceDescriptor in services)
+                Assert.Contains(expected, a => a == serviceDescriptor.ServiceType);
         }
     }
 }
