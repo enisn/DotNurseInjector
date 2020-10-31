@@ -7,7 +7,7 @@
 
 <td>
 <h2>.Nurse Injector</h2>
-.Nurse is automatic dependency Injector for dotnet.
+Simple, lightweight & useful Dependency Injector for dotnet.
  </td>
 </tr>
 </table>
