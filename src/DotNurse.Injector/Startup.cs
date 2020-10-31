@@ -11,7 +11,6 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class Startup
     {
-        private static bool didInitialized;
         public static IServiceCollection AddServicesFrom(this IServiceCollection services,
                                                             string @namespace,
                                                             ServiceLifetime defaultLifetime = ServiceLifetime.Transient,
@@ -61,7 +60,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     foreach (var injectAsAttribute in injectAsAttributes)
                         services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? lifetime));
             }
-            return services.AddDotNurseInjector();
+            return services;
         }
 
         /// <summary>
@@ -78,16 +77,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
                 }
-            return services.AddDotNurseInjector();
+
+            return services;
         }
 
         public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
         {
-            if (!didInitialized)
-            {
-                services.AddSingleton<IAttributeInjector, DotNurseAttributeInjector>();
-                didInitialized = true;
-            }
+            services.AddSingleton<IAttributeInjector, DotNurseAttributeInjector>();  
 
             return services;
         }
