@@ -13,7 +13,7 @@
 </table>
 
 <a href="https://www.nuget.org/packages/DotNurse.Injector/">
-    <img alt="Nuget" src="https://img.shields.io/nuget/v/DotNurse.Injector?logo=nuget&style=flat-square">
+    <img alt="Nuget" src="https://img.shields.io/nuget/v/DotNurse.Injector.AspNetCore?logo=nuget&style=flat-square">
 </a>
 
 <a href="https://www.codefactor.io/repository/github/enisn/dotnurseinjector">
@@ -28,7 +28,7 @@
 
 ## Getting Started
 
-- Install Nuget package [from here](https://www.nuget.org/packages/DotNurse.Injector/).
+- Install Nuget package [from here](https://www.nuget.org/packages/DotNurse.Injector.AspNetCore/).
 
 - Go your **Startup.cs**, remove all your manual injections and use `AddServicesFrom()` method with namespace.
 
@@ -53,7 +53,41 @@ services.AddServicesFrom("MyCompany.ProjectName.Repositories.Concrete"); // <-- 
 
 ***
 
-<img src="https://raw.githubusercontent.com/enisn/DotNurseInjector/main/art/dotnurse-github.png" alt="dotnurse-injector-social-preview" />
+## Attribute Injection
+> This section is **optional**. You can still use default Microsoft Dependency Injection and skip this step.
+
+You can use attribute injection instead of constructor injection. Using `[InjectService]` attribute for properties of fields is enough to inject them from IoC.
+
+### Setting Up
+
+You must replace your Service Provider with .Nurse Injecor to use **Attribute Injection**.
+
+- Go your **Program.cs** and add `UseDotNurseInjector()` method to IHostBuilder.
+
+```csharp
+ public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseDotNurseInjector() // <-- Adding this one is enough!
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+```
+
+
+### Usage
+```csharp
+[InjectService] public IBookRepository BookRepository { get; set; }
+```
+
+```csharp
+[InjectService] public IBookRepository bookRepository;
+```
+
+
+***
+
+<img src="https://raw.githubusercontent.com/enisn/DotNurseInjector/master/art/dotnurse-github.png" alt="dotnurse-injector-social-preview" />
 
 ***
 

@@ -49,16 +49,19 @@ namespace Microsoft.Extensions.DependencyInjection
                     continue;
                 }
 
+                var injectAsAttributes = type.GetCustomAttributes<InjectAsAttribute>().ToArray();
+                if (injectAsAttributes?.Length > 0)
+                {
+                    foreach (var injectAsAttribute in injectAsAttributes)
+                        services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? lifetime));
+                    continue;
+                }
+
                 if (interfaces.Length > 1)
                 {
                     services.Add(new ServiceDescriptor(options.SelectInterface(interfaces), type, lifetime));
                     continue;
                 }
-
-                var injectAsAttributes = type.GetCustomAttributes<InjectAsAttribute>().ToArray();
-                if (injectAsAttributes?.Length > 0)
-                    foreach (var injectAsAttribute in injectAsAttributes)
-                        services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? lifetime));
             }
             return services;
         }
@@ -75,10 +78,19 @@ namespace Microsoft.Extensions.DependencyInjection
             foreach (var type in types)
                 foreach (var injectAsAttribute in type.GetCustomAttributes<InjectAsAttribute>())
                 {
-                    services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs,type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
+                    services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
                 }
+
             return services;
         }
+
+        public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
+        {
+            services.AddSingleton<IAttributeInjector, DotNurseAttributeInjector>();
+
+            return services;
+        }
+
         private static IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null)
         {
             if (assembly != null)
@@ -87,7 +99,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             var assemblies = GetAssembliesToSearchFor().Where(x => x.FullName.StartsWith(@namespace.Split('.').FirstOrDefault())).ToList();
-            
+
             return assemblies.SelectMany(s => s.GetTypes()).Where(x => x.Namespace == @namespace && !x.IsNested && x.IsClass && !x.IsAbstract);
         }
 
@@ -102,11 +114,17 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static IEnumerable<Assembly> GetAssembliesToSearchFor()
         {
-            return Assembly
+            var assemblies = Assembly
                     .GetEntryAssembly()
                     .GetReferencedAssemblies()
                     .Select(s => Assembly.Load(s.ToString()))
                     .Concat(new[] { Assembly.GetEntryAssembly() });
+
+            if (AppDomain.CurrentDomain.FriendlyName == "testhost") // Test host is not referenced directly .dll
+                assemblies = assemblies
+                    .Concat(AppDomain.CurrentDomain.GetAssemblies());
+
+            return assemblies.Distinct();
         }
     }
 }

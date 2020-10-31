@@ -10,7 +10,7 @@ namespace DotNurse.Injector.Attributes
     /// <summary>
     /// This is a markup to decide serviec type of implementation.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class InjectAsAttribute : Attribute
     {
         /// <summary>

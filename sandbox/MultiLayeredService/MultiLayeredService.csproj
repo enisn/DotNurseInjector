@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DotNurse.Injector\DotNurse.Injector.csproj" />
+    <ProjectReference Include="..\..\src\DotNurse.Injector.AspNetCore\DotNurse.Injector.AspNetCore.csproj" />
     <ProjectReference Include="..\MultiLayeredService.Repositories\MultiLayeredService.Repositories.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DotNurse.Injector.Attributes;
+using Microsoft.AspNetCore.Mvc;
 using MultiLayeredService.Repositories.Abstraction;
 using System;
 using System.Collections.Generic;
@@ -13,23 +14,19 @@ namespace MultiLayeredService.Controllers
     [Route("api/[controller]")]
     public class BooksController : ControllerBase
     {
-        private readonly IBookRepository bookRepository;
-
-        public BooksController(IBookRepository bookRepository)
-        {
-            this.bookRepository = bookRepository;
-        }
+        [InjectService] public IBookRepository bookRepository;
+        [InjectService] public IBookRepository BookRepository { get; set; }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(bookRepository.Get());
+            return Ok(BookRepository.Get());
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            return Ok(bookRepository.GetSingle(id));
+            return Ok(BookRepository.GetSingle(id));
         }
     }
 }
