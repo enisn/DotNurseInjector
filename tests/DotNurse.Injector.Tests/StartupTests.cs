@@ -17,9 +17,9 @@ namespace DotNurse.Injector.Tests
         {
             // Arrange
             var services = new ServiceCollection();
-            var nameSpace = "Applyze.Utils.DotInjector.Tests.Environment.NamespaceSingle";
+            var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceSingle";
 
-            var expected = GetType().Assembly.GetTypes().Where(c => c.Namespace == nameSpace).ToList();
+            var expected = GetType().Assembly.GetTypes().Where(c => c.Namespace == nameSpace && !c.IsAbstract).ToList();
 
             // Act
             services.AddServicesFrom(nameSpace);
@@ -36,7 +36,7 @@ namespace DotNurse.Injector.Tests
         {
             // Arrange
             var services = new ServiceCollection();
-            var nameSpace = "Applyze.Utils.DotInjector.Tests.Environment.NamespaceSingle";
+            var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceSingle";
 
             var expected = GetType().Assembly.GetTypes().Where(x => x.Namespace == nameSpace && !x.IsAbstract).ToList();
 
@@ -58,7 +58,7 @@ namespace DotNurse.Injector.Tests
         {
             // Arrange
             var services = new ServiceCollection();
-            var nameSpace = "Applyze.Utils.DotInjector.Tests.Environment.NamespaceMultiple";
+            var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceMultiple";
 
             var expected = GetType().Assembly.GetTypes().Where(x => x.Namespace == nameSpace && !x.IsAbstract).ToList();
 
