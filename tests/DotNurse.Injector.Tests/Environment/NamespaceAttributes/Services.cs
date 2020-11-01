@@ -24,9 +24,9 @@ namespace DotNurse.Injector.Tests.Environment.NamespaceAttributes
     {
     }
 
-    [InjectAs(typeof(IComputer))]
-    [InjectAs(typeof(ILaptop))]
-    [InjectAs(typeof(MyLaptop))]
+    [RegisterAs(typeof(IComputer))]
+    [RegisterAs(typeof(ILaptop))]
+    [RegisterAs(typeof(MyLaptop))]
     public class MyLaptop : ILaptop
     {
     }
