@@ -67,18 +67,18 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Adds only services which is marked with [<see cref="InjectAsAttribute"/>] attribute.
+        /// Adds only services which is marked with [<see cref="RegisterAsAttribute"/>] attribute.
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
         public static IServiceCollection AddServicesByAttributes(this IServiceCollection services, ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient)
         {
-            var types = FindTypesWithAttribute<InjectAsAttribute>();
+            var types = FindTypesWithAttribute<RegisterAsAttribute>();
 
             foreach (var type in types)
-                foreach (var injectAsAttribute in type.GetCustomAttributes<InjectAsAttribute>())
+                foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
                 {
-                    services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
+                    services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
                 }
 
             return services;
