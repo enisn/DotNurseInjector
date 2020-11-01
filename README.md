@@ -7,7 +7,7 @@
 
 <td>
 <h2>.Nurse Injector</h2>
-.Nurse is automatic dependency Injector for dotnet.
+Simple, lightweight & useful Dependency Injector for dotnet.
  </td>
 </tr>
 </table>
@@ -53,10 +53,10 @@ services.AddServicesFrom("MyCompany.ProjectName.Repositories.Concrete"); // <-- 
 
 ***
 
-## Attribute Injection
+## Property/Field Injection
 > This section is **optional**. You can still use default Microsoft Dependency Injection and skip this step.
 
-You can use attribute injection instead of constructor injection. Using `[InjectService]` attribute for properties of fields is enough to inject them from IoC.
+You can use attribute injection instead of constructor injection. Using `[InjectService]` attribute for properties or fields is enough to inject them from IoC.
 
 ### Setting Up
 
