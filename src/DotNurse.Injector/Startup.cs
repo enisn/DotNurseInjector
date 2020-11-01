@@ -49,11 +49,11 @@ namespace Microsoft.Extensions.DependencyInjection
                     continue;
                 }
 
-                var injectAsAttributes = type.GetCustomAttributes<InjectAsAttribute>().ToArray();
-                if (injectAsAttributes?.Length > 0)
+                var registerAsAttribute = type.GetCustomAttributes<RegisterAsAttribute>().ToArray();
+                if (registerAsAttribute?.Length > 0)
                 {
-                    foreach (var injectAsAttribute in injectAsAttributes)
-                        services.Add(new ServiceDescriptor(injectAsAttribute.TypeToInjectAs, type, injectAsAttribute.ServiceLifetime ?? lifetime));
+                    foreach (var injectAsAttribute in registerAsAttribute)
+                        services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime));
                     continue;
                 }
 
