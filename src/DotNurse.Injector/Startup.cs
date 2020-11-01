@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -36,10 +34,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 var lifetime = attribute?.ServiceLifetime ?? defaultLifetime;
 
                 var interfaces = type.GetInterfaces();
-                if (interfaces.Length == 0 || options.AddWithoutInterfaceToo)
-                {
+                if (interfaces.Length == 0 || options.AddWithoutInterfaceToo)              
                     services.Add(new ServiceDescriptor(type, type, lifetime));
-                }
 
                 if (interfaces.Length == 1)
                 {
@@ -77,9 +73,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             foreach (var type in types)
                 foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
-                {
                     services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
-                }
 
             return services;
         }
@@ -93,10 +87,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null)
         {
-            if (assembly != null)
-            {
+            if (assembly != null)            
                 return assembly.GetTypes().Where(x => x.Namespace == @namespace && !x.IsAbstract && x.IsClass);
-            }
 
             var assemblies = GetAssembliesToSearchFor().Where(x => x.FullName.StartsWith(@namespace.Split('.').FirstOrDefault())).ToList();
 
@@ -106,9 +98,8 @@ namespace Microsoft.Extensions.DependencyInjection
         private static IEnumerable<Type> FindTypesWithAttribute<T>(Assembly assembly = null) where T : Attribute
         {
             if (assembly != null)
-            {
                 return assembly.GetTypes().Where(x => x.GetCustomAttribute<T>() != null);
-            }
+
             return GetAssembliesToSearchFor().SelectMany(sm => sm.GetTypes()).Where(x => x.IsDefined(typeof(T)));
         }
 
@@ -121,8 +112,10 @@ namespace Microsoft.Extensions.DependencyInjection
                     .Concat(new[] { Assembly.GetEntryAssembly() });
 
             if (AppDomain.CurrentDomain.FriendlyName == "testhost") // Test host is not referenced directly .dll
+            {
                 assemblies = assemblies
                     .Concat(AppDomain.CurrentDomain.GetAssemblies());
+            }
 
             return assemblies.Distinct();
         }
