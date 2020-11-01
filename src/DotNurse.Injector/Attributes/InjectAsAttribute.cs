@@ -7,35 +7,23 @@ using System.Threading.Tasks;
 
 namespace DotNurse.Injector.Attributes
 {
-    [Obsolete("This property is obsolete. Name doesn't present what it does do. Use [RegisterAs] instead of this [InjectAs].")]
+    [Obsolete("This property is obsolete. Name doesn't present what it does do. Use [RegisterAs] instead of this [InjectAs].", true)]
     /// <summary>
-    /// This is a markup to decide serviec type of implementation.
+    /// <inheritdoc/>
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class InjectAsAttribute : Attribute
+    public class InjectAsAttribute : RegisterAsAttribute
     {
-        /// <summary>
-        /// You can define service type to inject this object into.
-        /// For example; BookRepository inherits IBookRepository, and it inherit from IBaseRepository too. Object has 2 interface.
-        /// You can inject directly to IBaseRepository via using -> [InjectAs(typeof(IBaseRepository))].
-        /// That means -> services.AddTransient&lt;IBaseRepository, BookRepository&gt;();
-        /// </summary>
-        /// <param name="typeToInjectAs"></param>
-        public InjectAsAttribute(Type typeToInjectAs)
+        public InjectAsAttribute(Type serviceType) : base(serviceType)
         {
-            this.TypeToInjectAs = typeToInjectAs;
         }
 
-        public InjectAsAttribute(Type typeToInjectAs, ServiceLifetime serviceLifetime) : this(typeToInjectAs)
+        public InjectAsAttribute(Type serviceType, ServiceLifetime serviceLifetime) : base(serviceType, serviceLifetime)
         {
-            this.ServiceLifetime = serviceLifetime;
         }
-
-        public Type TypeToInjectAs { get; set; }
-
-        /// <summary>
-        /// Leave it null to use default lifetime.
-        /// </summary>
-        public ServiceLifetime? ServiceLifetime { get; set; }
+        /*
+        * !OBSOLETE 
+        * Will be removed after next major version
+        */
     }
 }
