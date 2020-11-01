@@ -91,5 +91,41 @@ namespace DotNurse.Injector.Tests
             foreach (var serviceDescriptor in services)
                 Assert.Contains(expected, a => a == serviceDescriptor.ServiceType);
         }
+
+        [Fact]
+        public void AddServicesByAttributes_ShouldAddCorrectCount_WithoutParameter()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            var expected = new [] { typeof(IComputer), typeof(ILaptop), typeof(MyLaptop) };
+
+            // Act
+            services.AddServicesByAttributes();
+
+            // Assert
+            Assert.Equal(expected.Length, services.Count);
+            foreach (var serviceDescriptor in services)
+                Assert.Contains(expected, a => a == serviceDescriptor.ServiceType);
+        }
+        [Theory]
+        [InlineData(ServiceLifetime.Transient)]
+        [InlineData(ServiceLifetime.Scoped)]
+        [InlineData(ServiceLifetime.Singleton)]
+        public void AddServicesByAttributes_ShouldAddCorrectCount_WithLifetimeParameter(ServiceLifetime lifetime)
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            var expected = new [] { typeof(IComputer), typeof(ILaptop), typeof(MyLaptop) };
+
+            // Act
+            services.AddServicesByAttributes(lifetime);
+
+            // Assert
+            Assert.Equal(expected.Length, services.Count);
+            foreach (var serviceDescriptor in services)
+                Assert.Contains(expected, a => a == serviceDescriptor.ServiceType && serviceDescriptor.Lifetime == lifetime);
+        }
     }
 }
