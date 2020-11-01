@@ -105,7 +105,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static IEnumerable<Type> FindTypesWithAttribute<T>(Assembly assembly = null) where T : Attribute
         {
-            if (assembly == null)
+            if (assembly != null)
             {
                 return assembly.GetTypes().Where(x => x.GetCustomAttribute<T>() != null);
             }
