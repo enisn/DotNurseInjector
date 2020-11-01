@@ -109,7 +109,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 return assembly.GetTypes().Where(x => x.GetCustomAttribute<T>() != null);
             }
-            return GetAssembliesToSearchFor().SelectMany(sm => sm.GetTypes()).Where(x => x.GetCustomAttribute<T>() != null);
+            return GetAssembliesToSearchFor().SelectMany(sm => sm.GetTypes()).Where(x => x.IsDefined(typeof(T)));
         }
 
         private static IEnumerable<Assembly> GetAssembliesToSearchFor()
