@@ -20,7 +20,7 @@ namespace DotNurse.Injector
 
         public object GetService(Type serviceType)
         {
-            var attributeInjector = defaultProvider.GetService<IAttributeInjector>();
+            var attributeInjector = defaultProvider.GetService<IAttributeInjector>() ?? throw new InvalidOperationException("IAttributeInjector couldn't be resolved from DotNurseServiceProvider.\n\n - Did you add .UseDotNurseInjecor() method at your Program.cs? \n\n - Adding `service.AddDotNurseInjector()` method is enogh to find it.");
 
             var instance = defaultProvider.GetService(serviceType);
 
