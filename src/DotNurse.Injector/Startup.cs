@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Hosting;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace DotNurse.Injector
 {
     public static class Startup
     {
