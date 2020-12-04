@@ -67,9 +67,9 @@ namespace DotNurse.Injector
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddServicesByAttributes(this IServiceCollection services, ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient)
+        public static IServiceCollection AddServicesByAttributes(this IServiceCollection services, ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient, Assembly assembly = null)
         {
-            var types = FindTypesWithAttribute<RegisterAsAttribute>();
+            var types = FindTypesWithAttribute<RegisterAsAttribute>(assembly);
 
             foreach (var type in types)
                 foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
