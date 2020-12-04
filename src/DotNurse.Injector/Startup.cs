@@ -34,8 +34,8 @@ namespace DotNurse.Injector
                 var lifetime = attribute?.ServiceLifetime ?? defaultLifetime;
 
                 var interfaces = type.GetInterfaces();
-                if (interfaces.Length == 0 || options.AddWithoutInterfaceToo)              
-                    services.Add(new ServiceDescriptor(type, type, lifetime));
+
+                services.Add(new ServiceDescriptor(type, type, lifetime));
 
                 if (interfaces.Length == 1)
                 {
@@ -87,7 +87,7 @@ namespace DotNurse.Injector
 
         private static IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null)
         {
-            if (assembly != null)            
+            if (assembly != null)
                 return assembly.GetTypes().Where(x => x.Namespace == @namespace && !x.IsAbstract && x.IsClass);
 
             var assemblies = GetAssembliesToSearchFor().Where(x => x.FullName.StartsWith(@namespace.Split('.').FirstOrDefault())).ToList();

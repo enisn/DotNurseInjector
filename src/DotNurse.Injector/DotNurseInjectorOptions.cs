@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using DotNurse.Injector;
 
 namespace DotNurse.Injector
 {
@@ -26,7 +25,5 @@ namespace DotNurse.Injector
         /// Filters only objects which inherits directly from this type. For ex.: typeof(BaseRepository<>)
         /// </summary>
         public Type ImplementationBase { get; set; }
-
-        public bool AddWithoutInterfaceToo { get; set; }
     }
 }
