@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <Authors>enisn</Authors>
     <Description>.Nurse Injector is auto dependency injector for .Net, makes your code clean &amp; more manageable dependencies.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -9,12 +9,16 @@
     <PackageTags>dotnet,dotnetcore,dependency,dependency injection,dependency injection,service lifetime,IoC,</PackageTags>
     <PackageReleaseNotes>Fix referenced assembly locationing</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyVersion>1.3.3</AssemblyVersion>
-    <PackageVersion>1.3.3</PackageVersion>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <PackageVersion>2.0.0</PackageVersion>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-rc.2.20475.5" />
   </ItemGroup>
 
   <ItemGroup>
