@@ -143,27 +143,6 @@ services.AddServicesFrom("ProjectNamespace.Services", ServiceLifetime.Scoped, op
 });
 ```
 
-### Adding Without Interface
-You may want to use directly objects sometimes, if an abstraction has multiple implmentations. Then you can use `AddWithoutInterfaceToo` options as **true**.
-If you set this option as true, object will be added into services without interface too, like following:
-
-```csharp
-services.AddServicesFrom("ProjectNamespace.Services", ServiceLifetime.Scoped, opts =>
-{
-    opts.AddWithoutInterfaceToo = true;
-});
-```
-
-This makes something like following:
-
-```csharp
-services.AddScoped<IBookService, BookService>();
-services.AddScoped<BookService>(); // < -- Adds without interface too.
-services.AddScoped<IAuthorService, AuthorService>();
-services.AddScoped<AuthorService>(); // <-- Also for each pattern matched objects.
-//...
-```
-
 *** 
 
 ## Managing from Objects
