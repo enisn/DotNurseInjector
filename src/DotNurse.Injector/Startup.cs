@@ -49,7 +49,8 @@ namespace DotNurse.Injector
                 if (registerAsAttribute?.Length > 0)
                 {
                     foreach (var injectAsAttribute in registerAsAttribute)
-                        services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime));
+                        if (!services.Any(a => a.ServiceType == injectAsAttribute.ServiceType))
+                            services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime));
                     continue;
                 }
 
