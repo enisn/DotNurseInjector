@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using DotNurse.Injector.Tests.Environment.NamespaceMultiple;
 using DotNurse.Injector.Tests.Environment.NamespaceAttributes;
+using System.Net.Mail;
 
 namespace DotNurse.Injector.Tests
 {
@@ -19,7 +20,11 @@ namespace DotNurse.Injector.Tests
             var services = new ServiceCollection();
             var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceSingle";
 
-            var expected = GetType().Assembly.GetTypes().Where(c => c.Namespace == nameSpace && !c.IsAbstract).ToList();
+            var expected = GetType().Assembly.GetTypes()
+                                .Where(c => c.Namespace == nameSpace && !c.IsAbstract)
+                                .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
+                                .Where(x => x != null)
+                                .ToList();
 
             // Act
             services.AddServicesFrom(nameSpace);
@@ -38,7 +43,11 @@ namespace DotNurse.Injector.Tests
             var services = new ServiceCollection();
             var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceSingle";
 
-            var expected = GetType().Assembly.GetTypes().Where(x => x.Namespace == nameSpace && !x.IsAbstract).ToList();
+            var expected = GetType().Assembly.GetTypes()
+                            .Where(x => x.Namespace == nameSpace && !x.IsAbstract)
+                            .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
+                            .Where(x => x != null)
+                            .ToList();
 
             // Act
             services.AddServicesFrom(nameSpace, lifetime);
@@ -60,7 +69,11 @@ namespace DotNurse.Injector.Tests
             var services = new ServiceCollection();
             var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceMultiple";
 
-            var expected = GetType().Assembly.GetTypes().Where(x => x.Namespace == nameSpace && !x.IsAbstract).ToList();
+            var expected = GetType().Assembly.GetTypes()
+                            .Where(x => x.Namespace == nameSpace && !x.IsAbstract)
+                            .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
+                            .Where(x => x != null)
+                            .ToList();
 
             // Act
             services.AddServicesFrom(nameSpace);
