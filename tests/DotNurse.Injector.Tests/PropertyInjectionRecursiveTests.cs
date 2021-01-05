@@ -4,8 +4,41 @@ using System;
 using DotNurse.Injector.Tests.Sample;
 using Xunit;
 
+namespace DotNurse.Injector.Tests
+{
+    public class PropertyInjectionRecursiveTests
+    {
+        private readonly IServiceProvider serviceProvider;
+        public PropertyInjectionRecursiveTests()
+        {
+            var services = new ServiceCollection();
+            services.AddDotNurseInjector();
+            services.AddServicesFrom("DotNurse.Injector.Tests.Sample");
+
+            serviceProvider = new DotNurseServiceProvider(services);
+        }
+
+        [Fact]
+        public void TestCase_1()
+        {
+            var encryptionService = serviceProvider.GetService<IEncryptionService>();
+            Assert.NotNull(encryptionService.EncryptionAlgorithm);
+        }
+
+        [Fact]
+        public void TestCase_2()
+        {
+            var service = serviceProvider.GetService<IMessageDataService>();
+            Assert.NotNull(service.EncryptionService.EncryptionAlgorithm);
+        }
+    }
+}
+
+#region Preparation
 namespace DotNurse.Injector.Tests.Sample
 {
+
+
     public interface IDataProvider<T>
     {
         T Get();
@@ -70,33 +103,4 @@ namespace DotNurse.Injector.Tests.Sample
     {
     }
 }
-
-namespace DotNurse.Injector.Tests
-{
-    public class PropertyInjectionRecursiveTests
-    {
-        private readonly IServiceProvider serviceProvider;
-        public PropertyInjectionRecursiveTests()
-        {
-            var services = new ServiceCollection();
-            services.AddDotNurseInjector();
-            services.AddServicesFrom("DotNurse.Injector.Tests.Sample");
-
-            serviceProvider = new DotNurseServiceProvider(services);
-        }
-
-        [Fact]
-        public void TestCase_1()
-        {
-            var encryptionService = serviceProvider.GetService<IEncryptionService>();
-            Assert.NotNull(encryptionService.EncryptionAlgorithm);
-        }
-
-        [Fact]
-        public void TestCase_2()
-        {
-            var service = serviceProvider.GetService<IMessageDataService>();
-            Assert.NotNull(service.EncryptionService.EncryptionAlgorithm);
-        }
-    }
-}
+#endregion
