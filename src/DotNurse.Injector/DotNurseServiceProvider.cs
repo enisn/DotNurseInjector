@@ -1,4 +1,5 @@
 ﻿using DotNurse.Injector.Attributes;
+using DotNurse.Injector.LifetimeOwners;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -15,7 +16,51 @@ namespace DotNurse.Injector
         private readonly IServiceProvider defaultProvider;
         public DotNurseServiceProvider(IServiceCollection defaultServiceCollection)
         {
-            defaultProvider = defaultServiceCollection.BuildServiceProvider();
+            var newServices = new ServiceCollection();
+
+            newServices.AddSingleton<ISingletonOwner, LifetimeOwner>();
+            newServices.AddScoped<IScopedOwner, LifetimeOwner>();
+            newServices.AddSingleton<IAttributeInjector, DotNurseAttributeInjector>();
+
+            foreach (var service in defaultServiceCollection)
+            {
+                // Using these variables will prevent factory lambda expression from capturing the actual ServiceDescriptors
+                var implementationInstance = service.ImplementationInstance;
+                var implementationType = service.ImplementationType;
+                var implementationFactory = service.ImplementationFactory;
+                var lifetime = service.Lifetime;
+
+                Func<IServiceProvider, object> factory = serviceProvider =>
+                {
+                    object instance;
+
+                    if (implementationInstance != null)
+                    {
+                        instance = implementationInstance;
+                    }
+                    else if (implementationType != null)
+                    {
+                        instance = serviceProvider.CreateOwnedInstance(implementationType, lifetime);
+                    }
+                    else if (implementationFactory != null)
+                    {
+                        instance = implementationFactory.Invoke(serviceProvider);
+                        serviceProvider.TakeOwnership(instance, lifetime);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
+
+                    serviceProvider.InjectIntoMembers(instance);
+
+                    return instance;
+                };
+
+                newServices.Add(new ServiceDescriptor(service.ServiceType, factory, lifetime));
+            }
+
+            defaultProvider = newServices.BuildServiceProvider();
         }
 
         public object GetService(Type serviceType)

@@ -81,8 +81,6 @@ namespace DotNurse.Injector
 
         public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
         {
-            services.AddSingleton<IAttributeInjector, DotNurseAttributeInjector>();
-
             return services;
         }
 
