@@ -7,7 +7,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>dotnurse-icon.png</PackageIcon>
     <PackageTags>dotnet,dotnetcore,dependency,dependency injection,dependency injection,service lifetime,IoC,</PackageTags>
-    <PackageReleaseNotes>Fix referenced assembly locationing</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix property injection for object which injected from constructor.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyVersion>2.2.0</AssemblyVersion>
     <PackageVersion>2.2.0</PackageVersion>
