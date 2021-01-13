@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Authors>enisn</Authors>
+    <Description>.Nurse Injector is auto dependency injector for .Net, makes your code clean &amp; more manageable dependencies.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>dotnet,dotnetcore,dependency,dependency injection,dependency injection,service lifetime,IoC,</PackageTags>
+    <PackageReleaseNotes>Fix property injection for object which injected from constructor.</PackageReleaseNotes>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyVersion>2.3.0</AssemblyVersion>
+    <PackageVersion>2.3.0</PackageVersion>
+  </PropertyGroup>
+</Project> 

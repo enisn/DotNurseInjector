@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6213C88A-A7D4-4EFD-A75D-392C9F7E6421}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		common.props = common.props
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -26,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiLayeredService.Reposit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNurse.Injector.AspNetCore", "src\DotNurse.Injector.AspNetCore\DotNurse.Injector.AspNetCore.csproj", "{8EEF344E-B72D-4F3D-9C93-1CCE6D8A64FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNurse.Injector.Benchmark", "tests\DotNurse.Injector.Benchmark\DotNurse.Injector.Benchmark.csproj", "{7A326C13-4F8E-4602-8AFF-B15DE72C7929}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNurse.Injector.Benchmark", "tests\DotNurse.Injector.Benchmark\DotNurse.Injector.Benchmark.csproj", "{7A326C13-4F8E-4602-8AFF-B15DE72C7929}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

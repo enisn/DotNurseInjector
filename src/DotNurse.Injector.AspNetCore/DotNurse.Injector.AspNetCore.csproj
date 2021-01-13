@@ -1,16 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\common.props" />
+
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Authors>enisn</Authors>
-    <Description>.Nurse Injector is auto dependency injector for .Net, makes your code clean &amp; more manageable dependencies.</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>dotnurse-icon.png</PackageIcon>
-    <PackageTags>dotnet,dotnetcore,dependency,dependency injection,dependency injection,service lifetime,IoC,</PackageTags>
-    <PackageReleaseNotes>Fix property injection for object which injected from constructor.</PackageReleaseNotes>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyVersion>2.2.0</AssemblyVersion>
-    <PackageVersion>2.2.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
