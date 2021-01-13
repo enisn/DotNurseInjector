@@ -1,4 +1,5 @@
 ﻿using DotNurse.Injector.Attributes;
+using DotNurse.Injector.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ namespace DotNurse.Injector
 {
     public static class Startup
     {
+        private static ITypeExplorer TypeExplorer { get; } = new DotNurseTypeExplorer();
+
         public static IServiceCollection AddServicesFrom(this IServiceCollection services,
                                                             string @namespace,
                                                             ServiceLifetime defaultLifetime = ServiceLifetime.Transient,
@@ -17,7 +20,7 @@ namespace DotNurse.Injector
             var options = new DotNurseInjectorOptions();
             configAction?.Invoke(options);
 
-            var types = FindTypesInNamespace(@namespace, options.Assembly);
+            var types = TypeExplorer.FindTypesInNamespace(@namespace, options.Assembly);
 
             foreach (var type in types)
             {
@@ -70,7 +73,7 @@ namespace DotNurse.Injector
         /// <returns></returns>
         public static IServiceCollection AddServicesByAttributes(this IServiceCollection services, ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient, Assembly assembly = null)
         {
-            var types = FindTypesWithAttribute<RegisterAsAttribute>(assembly);
+            var types = TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
 
             foreach (var type in types)
                 foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
@@ -82,41 +85,6 @@ namespace DotNurse.Injector
         public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
         {
             return services;
-        }
-
-        private static IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null)
-        {
-            if (assembly != null)
-                return assembly.GetTypes().Where(x => x.Namespace == @namespace && !x.IsAbstract && x.IsClass);
-
-            var assemblies = GetAssembliesToSearchFor().Where(x => x.FullName.StartsWith(@namespace.Split('.').FirstOrDefault())).ToList();
-
-            return assemblies.SelectMany(s => s.GetTypes()).Where(x => x.Namespace == @namespace && !x.IsNested && x.IsClass && !x.IsAbstract);
-        }
-
-        private static IEnumerable<Type> FindTypesWithAttribute<T>(Assembly assembly = null) where T : Attribute
-        {
-            if (assembly != null)
-                return assembly.GetTypes().Where(x => x.GetCustomAttribute<T>() != null);
-
-            return GetAssembliesToSearchFor().SelectMany(sm => sm.GetTypes()).Where(x => x.IsDefined(typeof(T)));
-        }
-
-        private static IEnumerable<Assembly> GetAssembliesToSearchFor()
-        {
-            var assemblies = Assembly
-                    .GetEntryAssembly()
-                    .GetReferencedAssemblies()
-                    .Select(s => Assembly.Load(s.ToString()))
-                    .Concat(new[] { Assembly.GetEntryAssembly() });
-
-            if (AppDomain.CurrentDomain.FriendlyName == "testhost") // Test host is not referenced directly .dll
-            {
-                assemblies = assemblies
-                    .Concat(AppDomain.CurrentDomain.GetAssemblies());
-            }
-
-            return assemblies.Distinct();
         }
     }
 }

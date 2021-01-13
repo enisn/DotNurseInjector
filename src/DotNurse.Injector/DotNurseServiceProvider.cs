@@ -1,5 +1,6 @@
 ﻿using DotNurse.Injector.Attributes;
 using DotNurse.Injector.LifetimeOwners;
+using DotNurse.Injector.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -21,6 +22,7 @@ namespace DotNurse.Injector
             newServices.AddSingleton<ISingletonOwner, LifetimeOwner>();
             newServices.AddScoped<IScopedOwner, LifetimeOwner>();
             newServices.AddSingleton<IAttributeInjector, DotNurseAttributeInjector>();
+            newServices.AddTransient<ITypeExplorer, DotNurseTypeExplorer>();
 
             foreach (var service in defaultServiceCollection)
             {
