@@ -30,34 +30,41 @@ namespace DotNurse.Injector
                 var implementationFactory = service.ImplementationFactory;
                 var lifetime = service.Lifetime;
 
-                Func<IServiceProvider, object> factory = serviceProvider =>
+                if (service.ServiceType.IsGenericType)
                 {
-                    object instance;
-
-                    if (implementationInstance != null)
+                    newServices.Add(service);
+                }
+                else
+                {
+                    Func<IServiceProvider, object> factory = serviceProvider =>
                     {
-                        instance = implementationInstance;
-                    }
-                    else if (implementationType != null)
-                    {
-                        instance = serviceProvider.CreateOwnedInstance(implementationType, lifetime);
-                    }
-                    else if (implementationFactory != null)
-                    {
-                        instance = implementationFactory.Invoke(serviceProvider);
-                        serviceProvider.TakeOwnership(instance, lifetime);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException();
-                    }
+                        object instance;
 
-                    serviceProvider.InjectIntoMembers(instance);
+                        if (implementationInstance != null)
+                        {
+                            instance = implementationInstance;
+                        }
+                        else if (implementationType != null)
+                        {
+                            instance = serviceProvider.CreateOwnedInstance(implementationType, lifetime);
+                        }
+                        else if (implementationFactory != null)
+                        {
+                            instance = implementationFactory.Invoke(serviceProvider);
+                            serviceProvider.TakeOwnership(instance, lifetime);
+                        }
+                        else
+                        {
+                            throw new NotSupportedException();
+                        }
 
-                    return instance;
-                };
+                        serviceProvider.InjectIntoMembers(instance);
 
-                newServices.Add(new ServiceDescriptor(service.ServiceType, factory, lifetime));
+                        return instance;
+                    };
+
+                    newServices.Add(new ServiceDescriptor(service.ServiceType, factory, lifetime));
+                }
             }
 
             defaultProvider = newServices.BuildServiceProvider();
