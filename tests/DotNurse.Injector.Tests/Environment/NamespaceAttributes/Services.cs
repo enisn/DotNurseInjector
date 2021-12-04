@@ -5,29 +5,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotNurse.Injector.Tests.Environment.NamespaceAttributes
+namespace DotNurse.Injector.Tests.Environment.NamespaceAttributes;
+
+public interface IDevice
 {
-    public interface IDevice
-    {
-    }
-    public interface IComputer : IDevice
-    {
-    }
-    public interface ICalculator : IDevice
-    {
-    }
-    public interface IMobilePhone : IDevice
-    {
-    }
+}
+public interface IComputer : IDevice
+{
+}
+public interface ICalculator : IDevice
+{
+}
+public interface IMobilePhone : IDevice
+{
+}
 
-    public interface ILaptop : IComputer
-    {
-    }
+public interface ILaptop : IComputer
+{
+}
 
-    [RegisterAs(typeof(IComputer))]
-    [RegisterAs(typeof(ILaptop))]
-    [RegisterAs(typeof(MyLaptop))]
-    public class MyLaptop : ILaptop
-    {
-    }
+[RegisterAs(typeof(IComputer))]
+[RegisterAs(typeof(ILaptop))]
+[RegisterAs(typeof(MyLaptop))]
+public class MyLaptop : ILaptop
+{
 }

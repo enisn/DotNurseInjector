@@ -6,49 +6,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotNurse.Injector.Benchmark.Sample
+namespace DotNurse.Injector.Benchmark.Samples;
+
+[RegisterAs(typeof(IDependency), ServiceLifetime.Singleton)]
+[RegisterAs(typeof(IDependencyA))]
+[RegisterAs(typeof(IAnother), ServiceLifetime.Scoped)]
+public class DependencyA : IDependencyA
 {
-    [RegisterAs(typeof(IDependency), ServiceLifetime.Singleton)]
-    [RegisterAs(typeof(IDependencyA))]
-    [RegisterAs(typeof(IAnother), ServiceLifetime.Scoped)]
-    public class DependencyA : IDependencyA
-    {
-    }
+}
 
-    [RegisterAs(typeof(IDependencyB))]
-    public class DependencyB : IDependencyB
-    {
-    }
+[RegisterAs(typeof(IDependencyB))]
+public class DependencyB : IDependencyB
+{
+}
 
-    public class DependencyC : IDependencyC
-    {
-    }
+public class DependencyC : IDependencyC
+{
+}
 
-    public class DependencyD : IDependencyD
-    {
-    }
+public class DependencyD : IDependencyD
+{
+}
 
-    public interface IDependencyA : IDependency
-    {
-    }
+public interface IDependencyA : IDependency
+{
+}
 
-    public interface IDependencyB : IDependency
-    {
-    }
+public interface IDependencyB : IDependency
+{
+}
 
-    public interface IDependencyC : IDependency
-    {
-    }
+public interface IDependencyC : IDependency
+{
+}
 
-    public interface IDependencyD : IDependency
-    {
-    }
+public interface IDependencyD : IDependency
+{
+}
 
-    public interface IDependency
-    {
-    }
+public interface IDependency
+{
+}
 
-    public interface IAnother
-    {
-    }
+public interface IAnother
+{
 }
