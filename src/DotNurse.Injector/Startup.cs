@@ -1,7 +1,6 @@
 ﻿using DotNurse.Injector.Attributes;
 using DotNurse.Injector.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,9 +40,8 @@ public static class Startup
         var types = TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
 
         foreach (var type in types)
-            foreach (var registerAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
-                foreach (var serviceType in registerAsAttribute.ServiceTypes)
-                    services.Add(new ServiceDescriptor(serviceType, type, registerAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
+            foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
+                services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
 
         return services;
     }
@@ -109,10 +107,9 @@ public static class Startup
             var registerAsAttribute = type.GetCustomAttributes<RegisterAsAttribute>().ToArray();
             if (registerAsAttribute?.Length > 0)
             {
-                foreach (var registerAsAttribute in registerAsAttribute)
-                    foreach (var serviceType in registerAsAttribute.ServiceTypes)
-                        services.TryAdd(new ServiceDescriptor(serviceType, type, registerAsAttribute.ServiceLifetime ?? lifetime));
-
+                foreach (var injectAsAttribute in registerAsAttribute)
+                    if (!services.Any(a => a.ServiceType == injectAsAttribute.ServiceType))
+                        services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime));
                 continue;
             }
 
