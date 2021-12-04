@@ -77,13 +77,15 @@ You must replace your Service Provider with .Nurse Injecor to use **Attribute In
 
 ### Usage
 ```csharp
-[InjectService] public IBookRepository BookRepository { get; set; }
+[InjectService] public IBookRepository BookRepository { get; private set; }
 ```
 
 ```csharp
-[InjectService] public IBookRepository bookRepository;
+[InjectService] protected IBookRepository bookRepository;
 ```
 
+### Known Issues with DotNurse Container
+- #8
 
 ***
 
