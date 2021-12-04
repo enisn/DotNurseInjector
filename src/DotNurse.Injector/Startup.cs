@@ -80,7 +80,7 @@ namespace DotNurse.Injector
 
             foreach (var type in types)
             {
-                if (type.GetCustomAttribute<IgnoreInjectionAttribute>() != null)
+                if (type.GetCustomAttribute<IgnoreInjectionAttribute>() != null || type.GetCustomAttribute<DontRegisterAttribute>() != null)
                     continue;
 
                 if (!options.SelectImplementtion(type))
