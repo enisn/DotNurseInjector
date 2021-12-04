@@ -6,7 +6,7 @@ namespace DotNurse.Injector.Attributes;
 /// <summary>
 /// This is a markup to decide serviec type of implementation.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class RegisterAsAttribute : Attribute
 {
     /// <summary>
@@ -16,17 +16,18 @@ public class RegisterAsAttribute : Attribute
     /// That means -> services.AddTransient&lt;IBaseRepository, BookRepository&gt;();
     /// </summary>
     /// <param name="serviceType"></param>
-    public RegisterAsAttribute(Type serviceType)
+    public RegisterAsAttribute(params Type[] serviceTypes)
     {
-        this.ServiceType = serviceType;
+        this.ServiceTypes = serviceTypes;
     }
 
+    [Obsolete("Use the constructor with array type parameter.")]
     public RegisterAsAttribute(Type serviceType, ServiceLifetime serviceLifetime) : this(serviceType)
     {
         this.ServiceLifetime = serviceLifetime;
     }
 
-    public Type ServiceType { get; set; }
+    public Type[] ServiceTypes { get; set; }
 
     /// <summary>
     /// Leave it null to use default lifetime.
