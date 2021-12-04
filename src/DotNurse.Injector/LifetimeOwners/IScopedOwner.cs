@@ -1,6 +1,5 @@
-﻿namespace DotNurse.Injector.LifetimeOwners
+﻿namespace DotNurse.Injector.LifetimeOwners;
+
+internal interface IScopedOwner : ILifetimeOwner
 {
-    internal interface IScopedOwner : ILifetimeOwner
-    {
-    }
 }

@@ -1,7 +1,6 @@
-﻿namespace DotNurse.Injector.LifetimeOwners
+﻿namespace DotNurse.Injector.LifetimeOwners;
+
+internal interface ILifetimeOwner
 {
-    internal interface ILifetimeOwner
-    {
-        void TakeOwnership(object obj);
-    }
+    void TakeOwnership(object obj);
 }

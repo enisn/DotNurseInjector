@@ -174,7 +174,7 @@ namespace DotNurse.Injector.Tests
             var allTypesCount = types.Count();
             
             // Act
-            services.AddServicesFrom(x => x.Namespace?.StartsWith("DotNurse.Injector.Tests.Environment") ?? false);
+            services.AddServicesFrom(x => x.Namespace?.StartsWith("DotNurse.Injector.Tests.Environment") ?? false, configAction: opts => opts.Assembly = GetType().Assembly);
             
             // Assert
             Console.WriteLine(services.Count + " >= " + allTypesCount);

@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace DotNurse.Injector
+namespace DotNurse.Injector;
+
+public interface IAttributeInjector
 {
-    public interface IAttributeInjector
-    {
-        void InjectIntoMembers(object instance, IServiceProvider serviceProvider);
-    }
+    void InjectIntoMembers(object instance, IServiceProvider serviceProvider);
 }
