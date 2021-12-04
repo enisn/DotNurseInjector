@@ -161,11 +161,11 @@ public class MyRepository : IMyRepository
 }
 ```
 
-### Ignore Injection Attribute
+### Ignoring Registration by Attribute
 You can ignore some of your class from injector.
 
 ```csharp
-[IgnoreInjection] // <-- This object will not be added to services
+[DontRegister] // <-- This object will not be added into services
 public class MyRepository : IMyRepository
 {
     // ...
