@@ -3,13 +3,13 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageIcon>dotnurse-icon.png</PackageIcon>
     <PackageTags>dotnet,dotnetcore,dependency,dependency injection,dependency injection,service lifetime,IoC,</PackageTags>
     <PackageReleaseNotes>Fix referenced assembly locationing</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyVersion>2.2.1</AssemblyVersion>
-    <PackageVersion>2.2.1</PackageVersion>
+    <AssemblyVersion>2.3.0</AssemblyVersion>
+    <PackageVersion>2.3.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

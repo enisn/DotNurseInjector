@@ -19,10 +19,10 @@ namespace DotNurse.Injector
         {
             var newServices = new ServiceCollection();
 
+            newServices.AddDotNurseInjector();
             newServices.AddSingleton<ISingletonOwner, LifetimeOwner>();
             newServices.AddScoped<IScopedOwner, LifetimeOwner>();
             newServices.AddSingleton<IAttributeInjector, DotNurseAttributeInjector>();
-            newServices.AddTransient<ITypeExplorer, DotNurseTypeExplorer>();
 
             foreach (var service in defaultServiceCollection)
             {

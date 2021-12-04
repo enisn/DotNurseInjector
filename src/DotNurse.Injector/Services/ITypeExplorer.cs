@@ -9,7 +9,15 @@ namespace DotNurse.Injector.Services
 {
     public interface ITypeExplorer
     {
-        IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null);
-        IEnumerable<Type> FindTypesWithAttribute<T>(Assembly assembly = null) where T : Attribute;
+        IEnumerable<Type> FindTypesByExpression(
+            Func<Type, bool> expression,
+            Assembly assembly = null);
+
+        IEnumerable<Type> FindTypesInNamespace(
+            string @namespace,
+            Assembly assembly = null);
+
+        IEnumerable<Type> FindTypesWithAttribute<T>(
+            Assembly assembly = null) where T : Attribute;
     }
 }
