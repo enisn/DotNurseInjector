@@ -22,9 +22,65 @@ namespace DotNurse.Injector
 
             var types = TypeExplorer.FindTypesInNamespace(@namespace, options.Assembly);
 
+            services.RegisterTypes(types, defaultLifetime, options);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds only services which is marked with [<see cref="RegisterAsAttribute"/>] attribute.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddServicesByAttributes(
+            this IServiceCollection services,
+            ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient,
+            Assembly assembly = null)
+        {
+            var types = TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
+
+            foreach (var type in types)
+                foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
+                    services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
+
+            return services;
+        }
+
+        public static IServiceCollection AddServicesFrom(
+            this IServiceCollection services,
+            Func<Type, bool> expression,
+            ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient,
+            Action<DotNurseInjectorOptions> configAction = null)
+        {
+            var options = new DotNurseInjectorOptions();
+            configAction?.Invoke(options);
+
+            var types = TypeExplorer.FindTypesByExpression(expression, options.Assembly);
+
+            services.RegisterTypes(types, defaultServiceLifetime, options);
+            return services;
+        }
+
+        public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
+        {
+            services.AddTransient<ITypeExplorer, DotNurseTypeExplorer>();
+            return services;
+        }
+
+        public static IServiceCollection RegisterTypes(
+            this IServiceCollection services,
+            IEnumerable<Type> types,
+            ServiceLifetime defaultLifetime = ServiceLifetime.Transient,
+            DotNurseInjectorOptions options = null)
+        {
+            if (options is null)
+            {
+                options = new DotNurseInjectorOptions();
+            }
+
             foreach (var type in types)
             {
-                if (type.GetCustomAttribute<IgnoreInjectionAttribute>() != null)
+                if (type.GetCustomAttribute<IgnoreInjectionAttribute>() != null || type.GetCustomAttribute<DontRegisterAttribute>() != null)
                     continue;
 
                 if (!options.SelectImplementtion(type))
@@ -63,27 +119,7 @@ namespace DotNurse.Injector
                     continue;
                 }
             }
-            return services;
-        }
 
-        /// <summary>
-        /// Adds only services which is marked with [<see cref="RegisterAsAttribute"/>] attribute.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddServicesByAttributes(this IServiceCollection services, ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient, Assembly assembly = null)
-        {
-            var types = TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
-
-            foreach (var type in types)
-                foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
-                    services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
-
-            return services;
-        }
-
-        public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
-        {
             return services;
         }
     }

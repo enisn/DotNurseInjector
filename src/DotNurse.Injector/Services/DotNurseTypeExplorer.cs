@@ -30,6 +30,15 @@ namespace DotNurse.Injector.Services
             return AssembliesToSearchFor.SelectMany(sm => sm.GetTypes()).Where(x => x.IsDefined(typeof(T)));
         }
 
+        public IEnumerable<Type> FindTypesByExpression(Func<Type, bool> expression, Assembly assembly = null)
+        {
+
+            if (assembly != null)
+                return assembly.GetTypes().Where(expression);
+
+            return AssembliesToSearchFor.SelectMany(sm => sm.GetTypes()).Where(expression);
+        }
+
         private static IList<Assembly> AssembliesToSearchFor
         {
             get

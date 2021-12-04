@@ -8,6 +8,8 @@ using Xunit;
 using DotNurse.Injector.Tests.Environment.NamespaceMultiple;
 using DotNurse.Injector.Tests.Environment.NamespaceAttributes;
 using System.Net.Mail;
+using DotNurse.Injector.Services;
+using Xunit.Abstractions;
 
 namespace DotNurse.Injector.Tests
 {
@@ -21,10 +23,10 @@ namespace DotNurse.Injector.Tests
             var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceSingle";
 
             var expected = GetType().Assembly.GetTypes()
-                                .Where(c => c.Namespace == nameSpace && !c.IsAbstract)
-                                .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
-                                .Where(x => x != null)
-                                .ToList();
+                .Where(c => c.Namespace == nameSpace && !c.IsAbstract)
+                .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
+                .Where(x => x != null)
+                .ToList();
 
             // Act
             services.AddServicesFrom(nameSpace);
@@ -44,10 +46,10 @@ namespace DotNurse.Injector.Tests
             var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceSingle";
 
             var expected = GetType().Assembly.GetTypes()
-                            .Where(x => x.Namespace == nameSpace && !x.IsAbstract)
-                            .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
-                            .Where(x => x != null)
-                            .ToList();
+                .Where(x => x.Namespace == nameSpace && !x.IsAbstract)
+                .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
+                .Where(x => x != null)
+                .ToList();
 
             // Act
             services.AddServicesFrom(nameSpace, lifetime);
@@ -70,10 +72,10 @@ namespace DotNurse.Injector.Tests
             var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceMultiple";
 
             var expected = GetType().Assembly.GetTypes()
-                            .Where(x => x.Namespace == nameSpace && !x.IsAbstract)
-                            .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
-                            .Where(x => x != null)
-                            .ToList();
+                .Where(x => x.Namespace == nameSpace && !x.IsAbstract)
+                .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
+                .Where(x => x != null)
+                .ToList();
 
             // Act
             services.AddServicesFrom(nameSpace);
@@ -94,7 +96,7 @@ namespace DotNurse.Injector.Tests
             var services = new ServiceCollection();
             var @namespace = "DotNurse.Injector.Tests.Environment.NamespaceAttributes";
 
-            var expected = new [] { typeof(IComputer), typeof(ILaptop), typeof(MyLaptop) };
+            var expected = new[] { typeof(IComputer), typeof(ILaptop), typeof(MyLaptop) };
 
             // Act
             services.AddServicesFrom(@namespace);
@@ -111,7 +113,7 @@ namespace DotNurse.Injector.Tests
             // Arrange
             var services = new ServiceCollection();
 
-            var expected = new [] { typeof(IComputer), typeof(ILaptop), typeof(MyLaptop) };
+            var expected = new[] { typeof(IComputer), typeof(ILaptop), typeof(MyLaptop) };
 
             // Act
             services.AddServicesByAttributes();
@@ -121,6 +123,7 @@ namespace DotNurse.Injector.Tests
             foreach (var serviceDescriptor in services)
                 Assert.Contains(expected, a => a == serviceDescriptor.ServiceType);
         }
+
         [Theory]
         [InlineData(ServiceLifetime.Transient)]
         [InlineData(ServiceLifetime.Scoped)]
@@ -130,7 +133,7 @@ namespace DotNurse.Injector.Tests
             // Arrange
             var services = new ServiceCollection();
 
-            var expected = new [] { typeof(IComputer), typeof(ILaptop), typeof(MyLaptop) };
+            var expected = new[] { typeof(IComputer), typeof(ILaptop), typeof(MyLaptop) };
 
             // Act
             services.AddServicesByAttributes(lifetime);
@@ -138,7 +141,44 @@ namespace DotNurse.Injector.Tests
             // Assert
             Assert.Equal(expected.Length, services.Count);
             foreach (var serviceDescriptor in services)
-                Assert.Contains(expected, a => a == serviceDescriptor.ServiceType && serviceDescriptor.Lifetime == lifetime);
+                Assert.Contains(expected,
+                    a => a == serviceDescriptor.ServiceType && serviceDescriptor.Lifetime == lifetime);
+        }
+
+        [Fact]
+        public void AddServicesFrom_RegisterAll_ShouldMatchCount()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var types = new DotNurseTypeExplorer().FindTypesByExpression(x => true, GetType().Assembly);
+
+            var allTypeCount = types.Count();
+            
+            // Act
+            services.AddServicesFrom(t => true, configAction: opts => opts.Assembly = GetType().Assembly);
+
+            // Assert
+            Assert.True(services.Count >= allTypeCount);
+        }
+
+        [Fact]
+        public void AddServicesFrom_RegisterRecursive_ShouldMatchCount()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var types = new DotNurseTypeExplorer()
+                .FindTypesByExpression(
+                    x => x.Namespace?.StartsWith("DotNurse.Injector.Tests.Environment") ?? false,
+                    GetType().Assembly);
+
+            var allTypesCount = types.Count();
+            
+            // Act
+            services.AddServicesFrom(x => x.Namespace?.StartsWith("DotNurse.Injector.Tests.Environment") ?? false);
+            
+            // Assert
+            Console.WriteLine(services.Count + " >= " + allTypesCount);
+            Assert.True(services.Count >= types.Count());
         }
     }
 }
