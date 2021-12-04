@@ -1,22 +1,21 @@
-﻿namespace DotNurse.Injector.Tests.Environment.NamespaceMultiple
+﻿namespace DotNurse.Injector.Tests.Environment.NamespaceMultiple;
+
+public interface IVehicle
 {
-    public interface IVehicle
-    {
-    }
+}
 
-    public interface ICar : IVehicle
-    {
-    }
+public interface ICar : IVehicle
+{
+}
 
-    public interface IBike : IVehicle
-    {
-    }
+public interface IBike : IVehicle
+{
+}
 
-    public class Bike : IBike
-    {
-    }
+public class Bike : IBike
+{
+}
 
-    public class Car : ICar
-    {
-    }
+public class Car : ICar
+{
 }

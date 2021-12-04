@@ -1,32 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DotNurse.Injector.LifetimeOwners
+namespace DotNurse.Injector.LifetimeOwners;
+
+internal class LifetimeOwner : ILifetimeOwner, ISingletonOwner, IScopedOwner, IDisposable
 {
-    internal class LifetimeOwner : ILifetimeOwner, ISingletonOwner, IScopedOwner, IDisposable
+    private readonly List<object> objects = new List<object>();
+    private bool isDisposed;
+
+    public void TakeOwnership(object obj)
     {
-        private readonly List<object> objects = new List<object>();
-        private bool isDisposed;
+        if (!objects.Contains(obj))
+            objects.Add(obj);
+    }
 
-        public void TakeOwnership(object obj)
+    public void Dispose()
+    {
+        if (isDisposed)
+            return;
+
+        isDisposed = true;
+
+        foreach (var obj in objects)
         {
-            if (!objects.Contains(obj))
-                objects.Add(obj);
+            (obj as IDisposable)?.Dispose();
         }
 
-        public void Dispose()
-        {
-            if (isDisposed)
-                return;
-
-            isDisposed = true;
-
-            foreach (var obj in objects)
-            {
-                (obj as IDisposable)?.Dispose();
-            }
-
-            objects.Clear();
-        }
+        objects.Clear();
     }
 }

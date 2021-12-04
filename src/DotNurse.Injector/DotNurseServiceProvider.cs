@@ -1,4 +1,5 @@
 ﻿using DotNurse.Injector.Attributes;
+using DotNurse.Injector.Extensions;
 using DotNurse.Injector.LifetimeOwners;
 using DotNurse.Injector.Services;
 using Microsoft.Extensions.DependencyInjection;

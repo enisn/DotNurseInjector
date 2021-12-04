@@ -5,18 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotNurse.Injector
-{
-    public class DotNurseServiceProviderFactory : IServiceProviderFactory<DotNurseServiceProvider>
-    {
-        public DotNurseServiceProvider CreateBuilder(IServiceCollection services)
-        {
-            return new DotNurseServiceProvider(services);
-        }
+namespace DotNurse.Injector;
 
-        public IServiceProvider CreateServiceProvider(DotNurseServiceProvider containerBuilder)
-        {
-            return containerBuilder;
-        }
+public class DotNurseServiceProviderFactory : IServiceProviderFactory<DotNurseServiceProvider>
+{
+    public DotNurseServiceProvider CreateBuilder(IServiceCollection services)
+    {
+        return new DotNurseServiceProvider(services);
+    }
+
+    public IServiceProvider CreateServiceProvider(DotNurseServiceProvider containerBuilder)
+    {
+        return containerBuilder;
     }
 }

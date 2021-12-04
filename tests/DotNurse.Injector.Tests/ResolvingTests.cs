@@ -4,49 +4,48 @@ using Microsoft.Extensions.Options;
 using System;
 using Xunit;
 
-namespace DotNurse.Injector.Tests
+namespace DotNurse.Injector.Tests;
+
+public class ResolvingTests
 {
-    public class ResolvingTests
+    private readonly IServiceProvider serviceProvider;
+
+    public interface IMyService<T> { }
+    public class MyService<T> : IMyService<T> { }
+
+    public class MyOptions
     {
-        private readonly IServiceProvider serviceProvider;
+        public bool IsSomeFeatureEnabled { get; set; }
+    }
 
-        public interface IMyService<T> { }
-        public class MyService<T> : IMyService<T> { }
+    public ResolvingTests()
+    {
+        var services = new ServiceCollection();
+        services.AddDotNurseInjector();
+        services.AddServicesFrom("DotNurse.Injector.Tests.Sample");
 
-        public class MyOptions
-        {
-            public bool IsSomeFeatureEnabled { get; set; }
-        }
+        services.Add(new ServiceDescriptor(typeof(IMyService<>), typeof(MyService<>), ServiceLifetime.Transient));
 
-        public ResolvingTests()
-        {
-            var services = new ServiceCollection();
-            services.AddDotNurseInjector();
-            services.AddServicesFrom("DotNurse.Injector.Tests.Sample");
+        services.Configure<MyOptions>(opts => opts.IsSomeFeatureEnabled = true);
 
-            services.Add(new ServiceDescriptor(typeof(IMyService<>), typeof(MyService<>), ServiceLifetime.Transient));
+        serviceProvider = new DotNurseServiceProvider(services);
+    }
 
-            services.Configure<MyOptions>(opts => opts.IsSomeFeatureEnabled = true);
+    [Fact]
+    public void ShouldResolveGenericTypes()
+    {
+        var service = serviceProvider.GetRequiredService<IMyService<string>>();
 
-            serviceProvider = new DotNurseServiceProvider(services);
-        }
+        Assert.NotNull(service);
+    }
 
-        [Fact]
-        public void ShouldResolveGenericTypes()
-        {
-            var service = serviceProvider.GetRequiredService<IMyService<string>>();
+    [Fact]
+    public void ShouldResolveIOptions()
+    {
+        var options = serviceProvider.GetRequiredService<IOptions<MyOptions>>();
 
-            Assert.NotNull(service);
-        }
-
-        [Fact]
-        public void ShouldResolveIOptions()
-        {
-            var options = serviceProvider.GetRequiredService<IOptions<MyOptions>>();
-
-            Assert.NotNull(options);
-            Assert.True(options.Value.IsSomeFeatureEnabled);
-            Assert.True(true);
-        }
+        Assert.NotNull(options);
+        Assert.True(options.Value.IsSomeFeatureEnabled);
+        Assert.True(true);
     }
 }

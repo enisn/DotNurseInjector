@@ -5,42 +5,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotNurse.Injector.Tests.Environment.NamespaceInjectService
+namespace DotNurse.Injector.Tests.Environment.NamespaceInjectService;
+
+public interface IDataProvider<T>
 {
+    T Get();
+}
 
-    public interface IDataProvider<T>
+public interface IMessageDataProvider : IDataProvider<string>
+{
+}
+
+public class MessageDataProvider : IMessageDataProvider
+{
+    public string Get()
     {
-        T Get();
+        return "Hello World!";
     }
+}
 
-    public interface IMessageDataProvider : IDataProvider<string>
-    {
-    }
+public interface IDataService<T>
+{
+    T Retrieve();
+}
 
-    public class MessageDataProvider : IMessageDataProvider
-    {
-        public string Get()
-        {
-            return "Hello World!";
-        }
-    }
+public interface IMessageDataService : IDataService<string>
+{
+}
 
-    public interface IDataService<T>
+public class MessageDataService : IMessageDataService
+{
+    [InjectService]
+    public IMessageDataProvider MessageDataProvider { get; set; }
+    public string Retrieve()
     {
-        T Retrieve();
-    }
-
-    public interface IMessageDataService : IDataService<string>
-    {
-    }
-
-    public class MessageDataService : IMessageDataService
-    {
-        [InjectService]
-        public IMessageDataProvider MessageDataProvider { get; set; }
-        public string Retrieve()
-        {
-            return MessageDataProvider.Get();
-        }
+        return MessageDataProvider.Get();
     }
 }
