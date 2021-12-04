@@ -15,12 +15,12 @@ namespace MultiLayeredService.Controllers
     public class BooksController : ControllerBase
     {
         [InjectService] private IBookRepository bookRepository;
-        [InjectService] public IBookRepository BookRepository { get; set; }
+        [InjectService] public IBookRepository BookRepository { get; protected set; }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(bookRepository.Get());
+            return Ok(BookRepository.Get());
         }
 
         [HttpGet("{id}")]
