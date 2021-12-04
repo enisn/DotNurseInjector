@@ -14,19 +14,19 @@ namespace MultiLayeredService.Controllers
     [Route("api/[controller]")]
     public class BooksController : ControllerBase
     {
-        [InjectService] public IBookRepository bookRepository;
+        [InjectService] private IBookRepository bookRepository;
         [InjectService] public IBookRepository BookRepository { get; set; }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(BookRepository.Get());
+            return Ok(bookRepository.Get());
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            return Ok(BookRepository.GetSingle(id));
+            return Ok(bookRepository.GetSingle(id));
         }
     }
 }
