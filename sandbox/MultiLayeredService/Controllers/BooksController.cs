@@ -14,8 +14,8 @@ namespace MultiLayeredService.Controllers
     [Route("api/[controller]")]
     public class BooksController : ControllerBase
     {
-        [InjectService] public IBookRepository bookRepository;
-        [InjectService] public IBookRepository BookRepository { get; set; }
+        [InjectService] private IBookRepository bookRepository;
+        [InjectService] public IBookRepository BookRepository { get; protected set; }
 
         [HttpGet]
         public IActionResult Get()
@@ -26,7 +26,7 @@ namespace MultiLayeredService.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            return Ok(BookRepository.GetSingle(id));
+            return Ok(bookRepository.GetSingle(id));
         }
     }
 }

@@ -12,7 +12,7 @@ public class DotNurseAttributeInjector : IAttributeInjector
 {
     public void InjectIntoMembers(object instance, IServiceProvider serviceProvider)
     {
-        var members = instance.GetType().GetMembers().Where(x => x.IsDefined(typeof(InjectServiceAttribute)));
+        var members = instance.GetType().GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).Where(x => x.IsDefined(typeof(InjectServiceAttribute)));
         foreach (var member in members)
         {
             if (member is PropertyInfo propertyInfo)
