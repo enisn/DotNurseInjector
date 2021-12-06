@@ -83,7 +83,7 @@ public static class Startup
             if (type.GetCustomAttribute<IgnoreInjectionAttribute>() != null || type.GetCustomAttribute<DontRegisterAttribute>() != null)
                 continue;
 
-            if (!options.SelectImplementtion(type))
+            if (!options.SelectImplementation(type))
                 continue;
 
             if (options.ImplementationBase != null && options.ImplementationBase.IsAssignableFrom(type))

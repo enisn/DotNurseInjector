@@ -14,7 +14,13 @@ public class DotNurseInjectorOptions
     /// <summary>
     /// Filter objects by name with given algorithm.
     /// </summary>
-    public Func<Type, bool> SelectImplementtion { get; set; } = _ => true;
+    [Obsolete("This property has a typo. Please use SelectImplementation property instead of this.")]
+    public Func<Type, bool> SelectImplementtion { get => SelectImplementation; set => SelectImplementation = value; }
+
+    /// <summary>
+    /// Filter objects by name with given algorithm.
+    /// </summary>
+    public Func<Type, bool> SelectImplementation { get; set; } = _ => true;
 
     /// <summary>
     /// If there are multiple interfaces, how to choose. <see cref="InjectAsAttribute"/> is overrides this. Put that attribute over the class. That's it!
