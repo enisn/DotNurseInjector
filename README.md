@@ -169,7 +169,7 @@ public class MyRepository : IMyRepository
 ```
 
 ### Register As Attribute
-You can manage your service types to add into. This attribute can be used multiple time at once.
+You can manage your service types to add into. This attribute can be used multiple times at once.
 
 ```csharp
 /* 
