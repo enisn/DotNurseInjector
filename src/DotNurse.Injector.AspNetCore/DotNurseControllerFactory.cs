@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DotNurse.Injector.AspNetCore.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,9 @@ public class DotNurseControllerFactory : IControllerFactory
     private readonly IControllerActivator controllerActivator;
     private readonly IAttributeInjector attributeInjector;
 
-    public DotNurseControllerFactory(IControllerActivator controllerActivator, IAttributeInjector attributeInjector)
+    public DotNurseControllerFactory(
+        IControllerActivator controllerActivator,
+        IAttributeInjector attributeInjector)
     {
         this.controllerActivator = controllerActivator;
         this.attributeInjector = attributeInjector;
@@ -22,7 +25,14 @@ public class DotNurseControllerFactory : IControllerFactory
     public object CreateController(ControllerContext context)
     {
         var controller = controllerActivator.Create(context);
+
+        if (controller is ControllerBase controllerBase)
+        {
+            controllerBase.ControllerContext = context;
+        }
+
         attributeInjector.InjectIntoMembers(controller, context.HttpContext.RequestServices);
+
         return controller;
     }
 
