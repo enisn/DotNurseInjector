@@ -1,4 +1,5 @@
 ﻿using DotNurse.Injector.Attributes;
+using DotNurse.Injector.Registration;
 using DotNurse.Injector.Services;
 using LazyProxy;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,7 @@ namespace DotNurse.Injector;
 
 public static class Startup
 {
-    private static ITypeExplorer TypeExplorer { get; } = new DotNurseTypeExplorer();
+    private static DotNurseInjectorContext Context { get; } = new DotNurseInjectorContext();
 
     public static IServiceCollection AddServicesFrom(this IServiceCollection services,
                                                         string @namespace,
@@ -21,7 +22,7 @@ public static class Startup
         var options = new DotNurseInjectorOptions();
         configAction?.Invoke(options);
 
-        var types = TypeExplorer.FindTypesInNamespace(@namespace, options.Assembly);
+        var types = Context.TypeExplorer.FindTypesInNamespace(@namespace, options.Assembly);
 
         services.RegisterTypes(types, defaultLifetime, options);
 
@@ -39,7 +40,7 @@ public static class Startup
         bool useLazyProxy = false,
         Assembly assembly = null)
     {
-        var types = TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
+        var types = Context.TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
 
         foreach (var type in types)
             foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
@@ -57,15 +58,17 @@ public static class Startup
         var options = new DotNurseInjectorOptions();
         configAction?.Invoke(options);
 
-        var types = TypeExplorer.FindTypesByExpression(expression, options.Assembly);
+        var types = Context.TypeExplorer.FindTypesByExpression(expression, options.Assembly);
 
         services.RegisterTypes(types, defaultServiceLifetime, options);
         return services;
     }
 
-    public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
+    public static IServiceCollection AddDotNurseInjector(this IServiceCollection services, Action<DotNurseInjectorContext> contextAction = null)
     {
-        services.AddTransient<ITypeExplorer, DotNurseTypeExplorer>();
+        contextAction?.Invoke(Context);
+        services.Add(new ServiceDescriptor(typeof(ITypeExplorer), Context.TypeExplorer.GetType(), ServiceLifetime.Transient));
+        services.Add(new ServiceDescriptor(typeof(ILazyServiceDescriptorCreator), Context.LazyServiceDescriptorCreator.GetType(), ServiceLifetime.Transient));
         return services;
     }
 
@@ -133,13 +136,7 @@ public static class Startup
     {
         if (withLazyProxy && serviceType.IsAbstract)
         {
-            var factory = ActivatorUtilities.CreateFactory(implementationType, Array.Empty<Type>());
-
-            Func<IServiceProvider, object> lazyImplementationFactory = (s) => LazyProxyBuilder.CreateInstance(
-                serviceType,
-                () => factory(s, null));
-
-            return new ServiceDescriptor(serviceType, lazyImplementationFactory, lifetime);
+            return Context.LazyServiceDescriptorCreator.Create(serviceType, implementationType, lifetime);
         }
         else
         {

@@ -188,12 +188,6 @@ public class StartupTests
         var services = new ServiceCollection();
         var nameSpace = "DotNurse.Injector.Tests.Environment.NamespaceSingle";
 
-        //var expected = GetType().Assembly.GetTypes()
-        //    .Where(c => c.Namespace == nameSpace && !c.IsAbstract)
-        //    .SelectMany(sm => new[] { sm, sm.GetInterfaces()?.FirstOrDefault() })
-        //    .Where(x => x != null)
-        //    .ToList();
-
         // Act
         services.AddServicesFrom(nameSpace, configAction: opts => opts.UseLazyProxy = true);
 
