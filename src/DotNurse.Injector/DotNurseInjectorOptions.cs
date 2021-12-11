@@ -12,7 +12,7 @@ public class DotNurseInjectorOptions
     public Assembly Assembly { get; set; }
 
     /// <summary>
-    /// Uses lazy proxy by default. By default it's <see cref="false"/>.
+    /// Uses lazy proxy if set true. By default it's <see cref="false"/>.
     /// </summary>
     public bool UseLazyProxy { get; set; }
 
