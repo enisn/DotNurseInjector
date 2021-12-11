@@ -1,5 +1,6 @@
 ﻿using DotNurse.Injector.Attributes;
 using DotNurse.Injector.Services;
+using LazyProxy;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Reflection;
 
 namespace DotNurse.Injector;
 
-public static class Startup
+public static class ServiceCollectionExtensions
 {
     private static ITypeExplorer TypeExplorer { get; } = new DotNurseTypeExplorer();
 
@@ -35,13 +36,14 @@ public static class Startup
     public static IServiceCollection AddServicesByAttributes(
         this IServiceCollection services,
         ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient,
+        bool useLazyProxy = false,
         Assembly assembly = null)
     {
         var types = TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
 
         foreach (var type in types)
             foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
-                services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
+                services.Add(CreateServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime, useLazyProxy));
 
         return services;
     }
@@ -94,12 +96,12 @@ public static class Startup
 
             var interfaces = type.GetInterfaces();
 
-            services.Add(new ServiceDescriptor(type, type, lifetime));
+            services.Add(CreateServiceDescriptor(type, type, lifetime, options.UseLazyProxy));
 
             if (interfaces.Length == 1)
             {
                 var inheritFrom = interfaces.FirstOrDefault();
-                services.Add(new ServiceDescriptor(inheritFrom, type, lifetime));
+                services.Add(CreateServiceDescriptor(inheritFrom, type, lifetime, options.UseLazyProxy));
 
                 continue;
             }
@@ -109,17 +111,39 @@ public static class Startup
             {
                 foreach (var injectAsAttribute in registerAsAttribute)
                     if (!services.Any(a => a.ServiceType == injectAsAttribute.ServiceType))
-                        services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime));
+                        services.Add(CreateServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime, options.UseLazyProxy));
                 continue;
             }
 
             if (interfaces.Length > 1)
             {
-                services.Add(new ServiceDescriptor(options.SelectInterface(interfaces), type, lifetime));
+                services.Add(CreateServiceDescriptor(options.SelectInterface(interfaces), type, lifetime, options.UseLazyProxy));
                 continue;
             }
         }
 
         return services;
+    }
+
+    private static ServiceDescriptor CreateServiceDescriptor(
+        Type serviceType,
+        Type implementationType,
+        ServiceLifetime lifetime = ServiceLifetime.Transient,
+        bool withLazyProxy = false)
+    {
+        if (withLazyProxy)
+        {
+            var factory = ActivatorUtilities.CreateFactory(implementationType, Array.Empty<Type>());
+
+            Func<IServiceProvider, object> lazyImplementationFactory = (s) => LazyProxyBuilder.CreateInstance(
+                serviceType,
+                () => factory(s, null));
+
+            return new ServiceDescriptor(serviceType, lazyImplementationFactory, lifetime);
+        }
+        else
+        {
+            return new ServiceDescriptor(serviceType, implementationType, lifetime);
+        }
     }
 }

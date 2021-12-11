@@ -12,6 +12,11 @@ public class DotNurseInjectorOptions
     public Assembly Assembly { get; set; }
 
     /// <summary>
+    /// Uses lazy proxy by default. By default it's <see cref="false"/>.
+    /// </summary>
+    public bool UseLazyProxy { get; set; }
+
+    /// <summary>
     /// Filter objects by name with given algorithm.
     /// </summary>
     [Obsolete("This property has a typo. Please use SelectImplementation property instead of this.")]
