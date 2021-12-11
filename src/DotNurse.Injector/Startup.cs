@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace DotNurse.Injector;
 
-public static class ServiceCollectionExtensions
+public static class Startup
 {
     private static ITypeExplorer TypeExplorer { get; } = new DotNurseTypeExplorer();
 
