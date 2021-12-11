@@ -63,7 +63,7 @@ public static class Startup
 
     public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
     {
-        services.AddTransient<ITypeExplorer, DotNurseTypeExplorer>();
+        services.AddSingleton<ITypeExplorer, DotNurseTypeExplorer>();
         return services;
     }
 

@@ -7,8 +7,8 @@ namespace DotNurse.Injector.Services;
 
 public class DotNurseTypeExplorer : ITypeExplorer
 {
-    private static IList<Assembly> assemblies;
-    private static object lockingObj = new object();
+    private IList<Assembly> assemblies;
+    private object lockingObj = new object();
 
     public virtual IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null)
     {
@@ -36,7 +36,7 @@ public class DotNurseTypeExplorer : ITypeExplorer
         return AssembliesToSearchFor.SelectMany(sm => sm.GetTypes()).Where(expression);
     }
 
-    protected static IList<Assembly> AssembliesToSearchFor
+    protected IList<Assembly> AssembliesToSearchFor
     {
         get
         {
