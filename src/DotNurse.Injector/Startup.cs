@@ -131,7 +131,7 @@ public static class Startup
         ServiceLifetime lifetime = ServiceLifetime.Transient,
         bool withLazyProxy = false)
     {
-        if (withLazyProxy)
+        if (withLazyProxy && serviceType.IsAbstract)
         {
             var factory = ActivatorUtilities.CreateFactory(implementationType, Array.Empty<Type>());
 
