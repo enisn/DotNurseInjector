@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DotNurse.Injector;
 
@@ -17,7 +18,7 @@ public class DotNurseAttributeInjector : IAttributeInjector
         {
             if (member is PropertyInfo propertyInfo)
             {
-                var injectedInstance = serviceProvider.GetService(propertyInfo.PropertyType);
+                var injectedInstance = serviceProvider.GetRequiredService(propertyInfo.PropertyType);
                 propertyInfo?.SetValue(instance, injectedInstance);
             }
 
