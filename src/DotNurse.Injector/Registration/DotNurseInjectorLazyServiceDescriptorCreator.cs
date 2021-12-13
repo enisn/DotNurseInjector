@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using LazyProxy;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace DotNurse.Injector.Registration
@@ -7,7 +8,12 @@ namespace DotNurse.Injector.Registration
     {
         public virtual ServiceDescriptor Create(Type serviceType, Type implementationType, ServiceLifetime lifetime)
         {
-            return new ServiceDescriptor(serviceType, implementationType, lifetime);
+            var factory = ActivatorUtilities.CreateFactory(implementationType, Array.Empty<Type>());
+
+            return new ServiceDescriptor(
+                serviceType,
+                (s) => LazyProxyBuilder.CreateInstance(serviceType, () => factory(s, null)),
+                lifetime);
         }
     }
 }
