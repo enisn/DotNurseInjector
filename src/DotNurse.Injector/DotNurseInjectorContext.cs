@@ -7,6 +7,6 @@ namespace DotNurse.Injector
     {
         public ITypeExplorer TypeExplorer { get; set; } = new DotNurseTypeExplorer();
 
-        public ILazyServiceDescriptorCreator LazyServiceDescriptorCreator { get; set; } = new DotNurseInjectorLazyServiceRegistrar();
+        public ILazyServiceDescriptorCreator LazyServiceDescriptorCreator { get; set; } = new DotNurseInjectorLazyServiceDescriptorCreator();
     }
 }
