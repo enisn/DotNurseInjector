@@ -26,7 +26,7 @@ Simple, lightweight & useful Dependency Injector for dotnet.
 
 - Install Nuget package [from here](https://www.nuget.org/packages/DotNurse.Injector.AspNetCore/).
 
-- Go your **Startup.cs**, remove all your manual injections and use `AddServicesFrom()` method with namespace.
+- Go to your **Startup.cs**, remove all your manual injections and use `AddServicesFrom()` method with namespace.
 
   - If you have following pattern:
 ```csharp
