@@ -18,7 +18,6 @@ public static class Startup
         hostBuilder.UseServiceProviderFactory(new DotNurseServiceProviderFactory());
         hostBuilder.ConfigureServices(services =>
         {
-            services.AddDotNurseInjector();
             services.AddSingleton<IControllerFactory, DotNurseControllerFactory>();
             services.AddDotNurseInjector();
         });
