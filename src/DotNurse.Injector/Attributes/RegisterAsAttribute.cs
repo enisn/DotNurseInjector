@@ -26,10 +26,17 @@ public class RegisterAsAttribute : Attribute
         this.ServiceLifetime = serviceLifetime;
     }
 
+    public RegisterAsAttribute(Type serviceType, ServiceLifetime serviceLifetime, string descriptorCreatorName) : this(serviceType, serviceLifetime)
+    {
+        DescriptorCreatorName = descriptorCreatorName;
+    }
+
     public Type ServiceType { get; set; }
 
     /// <summary>
     /// Leave it null to use default lifetime.
     /// </summary>
     public ServiceLifetime? ServiceLifetime { get; set; }
+
+    public string DescriptorCreatorName { get; set; } = "Default";
 }

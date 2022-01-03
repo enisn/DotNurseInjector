@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DotNurse.Injector;
+namespace DotNurse.Injector.Registration;
 
 public class DotNurseAttributeInjector : IAttributeInjector
 {

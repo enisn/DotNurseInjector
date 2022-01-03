@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30626.31
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9B78944B-4ECE-439B-A987-2591D6B1F728}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNurse.Injector.AspNetCore", "src\DotNurse.Injector.AspNetCore\DotNurse.Injector.AspNetCore.csproj", "{8EEF344E-B72D-4F3D-9C93-1CCE6D8A64FA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNurse.Injector.Benchmark", "tests\DotNurse.Injector.Benchmark\DotNurse.Injector.Benchmark.csproj", "{7A326C13-4F8E-4602-8AFF-B15DE72C7929}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNurse.Injector.LazyProxy", "src\DotNurse.Injector.LazyProxy\DotNurse.Injector.LazyProxy.csproj", "{9FB7246D-5471-494D-8E7D-51395B54B9E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{7A326C13-4F8E-4602-8AFF-B15DE72C7929}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A326C13-4F8E-4602-8AFF-B15DE72C7929}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A326C13-4F8E-4602-8AFF-B15DE72C7929}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FB7246D-5471-494D-8E7D-51395B54B9E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FB7246D-5471-494D-8E7D-51395B54B9E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FB7246D-5471-494D-8E7D-51395B54B9E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FB7246D-5471-494D-8E7D-51395B54B9E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{F358A51F-FBC3-4E0C-AC8C-B12FDD325383} = {4400B44A-BAFB-4F3A-A7BC-F61C935BB7AE}
 		{8EEF344E-B72D-4F3D-9C93-1CCE6D8A64FA} = {9B78944B-4ECE-439B-A987-2591D6B1F728}
 		{7A326C13-4F8E-4602-8AFF-B15DE72C7929} = {8A68FD90-4A34-452A-B454-28972288AA04}
+		{9FB7246D-5471-494D-8E7D-51395B54B9E1} = {9B78944B-4ECE-439B-A987-2591D6B1F728}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {75503A2F-DC31-4EB0-922A-B36B1E2492F6}
