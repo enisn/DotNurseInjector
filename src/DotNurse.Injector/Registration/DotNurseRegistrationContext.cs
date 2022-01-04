@@ -16,7 +16,7 @@ public class DotNurseRegistrationContext
     public DotNurseRegistrationContext()
     {
         DescriptorCreators = TypeExplorer
-            .FindTypesByExpression(x => typeof(IServiceDescriptorCreator).IsAssignableFrom(x))
+            .FindTypesByExpression(x => typeof(IServiceDescriptorCreator).IsAssignableFrom(x) && !x.IsAbstract)
             .Distinct()
             .Select(s => new KeyValuePair<string, IServiceDescriptorCreator>(
                 key: s.GetCustomAttribute<DescriptorCreatorNameAttribute>()?.Name ?? s.Name,
