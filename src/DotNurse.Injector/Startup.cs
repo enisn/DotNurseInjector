@@ -35,13 +35,26 @@ public static class Startup
     public static IServiceCollection AddServicesByAttributes(
         this IServiceCollection services,
         ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient,
-        Assembly assembly = null)
+        Assembly assembly = null,
+        IServiceDescriptorCreator prefferedCreator = null)
     {
+        if (prefferedCreator is null)
+        {
+            // TODO: Find way to configure default for entire context.
+            prefferedCreator = Context.DescriptorCreators["Default"];
+        }
+
         var types = Context.TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
 
         foreach (var type in types)
-            foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
-                services.Add(Context.DescriptorCreators["Default"].Create(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
+            foreach (var attribute in type.GetCustomAttributes<RegisterAsAttribute>())
+            {
+                var _creator = prefferedCreator;
+                if (attribute.DescriptorCreatorName != null && type.IsAbstract)
+                    Context.DescriptorCreators.TryGetValue(attribute.DescriptorCreatorName, out _creator);
+
+                services.Add(_creator.Create(attribute.ServiceType, type, attribute.ServiceLifetime ?? defaultServiceLifetime));
+            }
 
         return services;
     }
@@ -94,12 +107,12 @@ public static class Startup
 
             var interfaces = type.GetInterfaces();
 
-            services.Add(Context.DescriptorCreators["Default"].Create(type, type, lifetime));
+            services.Add(options.ServiceDescriptorCreator.Create(type, type, lifetime));
 
             if (interfaces.Length == 1)
             {
                 var inheritFrom = interfaces.FirstOrDefault();
-                services.Add(Context.DescriptorCreators["Default"].Create(inheritFrom, type, lifetime));
+                services.Add(options.ServiceDescriptorCreator.Create(inheritFrom, type, lifetime));
 
                 continue;
             }
@@ -109,13 +122,13 @@ public static class Startup
             {
                 foreach (var injectAsAttribute in registerAsAttribute)
                     if (!services.Any(a => a.ServiceType == injectAsAttribute.ServiceType))
-                        services.Add(Context.DescriptorCreators["Default"].Create(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime));
+                        services.Add(options.ServiceDescriptorCreator.Create(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime));
                 continue;
             }
 
             if (interfaces.Length > 1)
             {
-                services.Add(Context.DescriptorCreators["Default"].Create(options.SelectInterface(interfaces), type, lifetime));
+                services.Add(options.ServiceDescriptorCreator.Create(options.SelectInterface(interfaces), type, lifetime));
                 continue;
             }
         }

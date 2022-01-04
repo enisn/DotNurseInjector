@@ -38,5 +38,5 @@ public class RegisterAsAttribute : Attribute
     /// </summary>
     public ServiceLifetime? ServiceLifetime { get; set; }
 
-    public string DescriptorCreatorName { get; set; } = "Default";
+    public string DescriptorCreatorName { get; set; }
 }

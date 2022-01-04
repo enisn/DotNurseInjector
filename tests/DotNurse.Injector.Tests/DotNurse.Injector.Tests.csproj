@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DotNurse.Injector.LazyProxy\DotNurse.Injector.LazyProxy.csproj" />
     <ProjectReference Include="..\..\src\DotNurse.Injector\DotNurse.Injector.csproj" />
   </ItemGroup>
 

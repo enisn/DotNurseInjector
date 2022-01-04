@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNurse.Injector.Registration;
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -14,7 +15,7 @@ public class DotNurseInjectorOptions
     /// <summary>
     /// Filter objects by name with given algorithm.
     /// </summary>
-    [Obsolete("This property has a typo. Please use SelectImplementation property instead of this.")]
+    [Obsolete("This property has a typo. Please use SelectImplementation property instead of this.", error: true)]
     public Func<Type, bool> SelectImplementtion { get => SelectImplementation; set => SelectImplementation = value; }
 
     /// <summary>
@@ -31,4 +32,6 @@ public class DotNurseInjectorOptions
     /// Filters only objects which inherits directly from this type. For ex.: typeof(BaseRepository<>)
     /// </summary>
     public Type ImplementationBase { get; set; }
+
+    public IServiceDescriptorCreator ServiceDescriptorCreator { get; set; } = new DotNurseServiceDescriptorCreator();
 }
