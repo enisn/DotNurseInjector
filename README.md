@@ -42,8 +42,22 @@ Simple, lightweight & useful Dependency Injector for dotnet.
   services.AddServicesFrom("MyCompany.ProjectName.Repositories.Concrete"); // <-- Your implementations namespace.
   ```
 
-- That's it! DotNurse will scan your entire assembly and referenced assemblies to find types with given namespace then registers them. 
+- ✅ That's it! DotNurse will scan your entire assembly and referenced assemblies to find types with the given namespace then register them to ServiceCollection.
 
+### Managing in Objects
+You can even define lifetimes and expose types from objects via using [[RegisterAs]](#register-as-attribute) attribute.
+
+- Firstly, you should add following method for registering by attributes.
+  ```csharp
+  services.AddServicesByAttributes();
+  ```
+- Then you're ready to decorate your objects with `[RegisterAs]` attribute.
+  ```csharp
+  [RegisterAs(typeof(IBookRepository))]
+  public class BookRepository : IBookRepository, IAnotherInterface, IYetAnothetInterface
+  {
+  }
+  ```
 
 ***
 
