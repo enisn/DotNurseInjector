@@ -29,13 +29,12 @@ Simple, lightweight & useful Dependency Injector for dotnet.
 - Go to your **Startup.cs**, remove all your manual injections and use `AddServicesFrom()` method with namespace.
 
   - If you have following pattern:
-  ```csharp
-  
-  services.AddTransient<IBookRepository, BookRepository>();
-  services.AddTransient<IAuthorRepository, AuthorRepository>();
-  services.AddTransient<IPublisherRepository, PublisherRepository>();
-  //...
+  ```diff
+  - services.AddTransient<IBookRepository, BookRepository>();
+  - services.AddTransient<IAuthorRepository, AuthorRepository>();
+  - services.AddTransient<IPublisherRepository, PublisherRepository>();
   ```
+  
   - Replace them with following:
 
   ```csharp
