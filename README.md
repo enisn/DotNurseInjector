@@ -85,8 +85,8 @@ You can remove long constructor and place attribute to your fields or properties
 ```csharp
 public class BookService 
 {
-  private IBookRepository BookRepository { get; private set; }
-  private BookManager _bookManager;
+  public IBookRepository BookRepository { get; private set; }
+  private readonly BookManager _bookManager;
   // ...
   
   public BookService(
@@ -107,7 +107,7 @@ public class BookService
 public class BookService 
 {
   [InjectService] private IBookRepository BookRepository { get; private set; }
-  [InjectService] private BookManager _bookManager;
+  [InjectService] private readonly BookManager _bookManager;
   // ...
 }
 ```
@@ -120,13 +120,12 @@ public class BookService
 
 # Customizations
 
-DotNurse meets your custom requirements such as a defining lifetime, injecting into different interfaces etc.
+DotNurse meets your custom requirements such as defining lifetime, injecting into different interfaces, etc.
 
 ***
 
 ## Managing from Startup
-
-.Nurse provides fluent api to manage your injections from single point.
+.Nurse provides fluent API to manage your injections from a single point.
 
 ### Service Lifetime
 
@@ -168,6 +167,16 @@ services.AddServicesFrom("ProjectNamespace.Services", ServiceLifetime.Scoped, op
 {
     opts.ImplementationBase = typeof(BaseRepository);
 });
+```
+
+### Custom Registration Rule
+You can use lambda expression to define your custom rules for registration. 
+
+In example, you can use it for registering types in a namespace recursively.
+```csharp
+// Following code will register all types under Services namespace and sub-namespaces too.
+services.AddServicesFrom(
+    x => x.Namespace != null && (x.Namespace.StartsWith("MyProject.Services"));
 ```
 
 *** 
