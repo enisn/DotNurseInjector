@@ -29,22 +29,20 @@ Simple, lightweight & useful Dependency Injector for dotnet.
 - Go to your **Startup.cs**, remove all your manual injections and use `AddServicesFrom()` method with namespace.
 
   - If you have following pattern:
-```csharp
-
-services.AddTransient<IBookRepository, BookRepository>();
-services.AddTransient<IAuthorRepository, AuthorRepository>();
-services.AddTransient<IPublisherRepository, PublisherRepository>();
-//...
-```
+  ```csharp
   
+  services.AddTransient<IBookRepository, BookRepository>();
+  services.AddTransient<IAuthorRepository, AuthorRepository>();
+  services.AddTransient<IPublisherRepository, PublisherRepository>();
+  //...
+  ```
   - Replace them with following:
 
-```csharp
-services.AddServicesFrom("MyCompany.ProjectName.Repositories.Concrete"); // <-- Your implementations namespace.
+  ```csharp
+  services.AddServicesFrom("MyCompany.ProjectName.Repositories.Concrete"); // <-- Your implementations namespace.
+  ```
 
-```
-
-- That's it! DotNurse can find your namespace from any assembly. You don't need to send any Assembly parameter.
+- That's it! DotNurse will scan your entire assembly and referenced assemblies to find types with given namespace then registers them. 
 
 
 ***
@@ -80,8 +78,39 @@ You must replace your Service Provider with .Nurse Injecor to use **Attribute In
 [InjectService] protected IBookRepository bookRepository;
 ```
 
-### Known Issues with DotNurse Container
-- #8
+#### Refactor your old codes
+You can remove long constructor and place attribute to your fields or properties.
+
+- Old code before DotNurseInjector
+```csharp
+public class BookService 
+{
+  private IBookRepository BookRepository { get; private set; }
+  private BookManager _bookManager;
+  // ...
+  
+  public BookService(
+    IBookRepository bookRepository,
+    BookManager bookManager,
+    // ... 
+    )
+  {
+     BookRepository = bookRepository;
+     _bookManager = bookManager;
+     // ...
+  }
+}
+```
+
+- New code after DotNutseInjector
+```csharp
+public class BookService 
+{
+  [InjectService] private IBookRepository BookRepository { get; private set; }
+  [InjectService] private BookManager _bookManager;
+  // ...
+}
+```
 
 ***
 
