@@ -20,7 +20,9 @@ public static class Startup
         var options = new DotNurseInjectorOptions();
         configAction?.Invoke(options);
 
-        var types = TypeExplorer.FindTypesInNamespace(@namespace, options.Assembly);
+        var types = TypeExplorer.FindTypesByExpression(
+            x => x.Namespace == @namespace && !x.IsNested && x.IsClass && !x.IsAbstract,
+            options.Assembly);
 
         services.RegisterTypes(types, defaultLifetime, options);
 

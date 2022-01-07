@@ -7,58 +7,36 @@ namespace DotNurse.Injector.Services;
 
 public class DotNurseTypeExplorer : ITypeExplorer
 {
-    private IList<Assembly> assemblies;
-    private object lockingObj = new object();
-
-    public virtual IEnumerable<Type> FindTypesInNamespace(string @namespace, Assembly assembly = null)
+    public virtual IEnumerable<Type> FindTypesWithAttribute<T>(Assembly assembly = null, bool scanReferences = true) where T : Attribute
     {
-        if (assembly != null)
-            return assembly.GetTypes().Where(x => x.Namespace == @namespace && !x.IsAbstract && x.IsClass);
-
-        var assemblies = AssembliesToSearchFor.Where(x => x.FullName.StartsWith(@namespace.Split('.').FirstOrDefault()));
-
-        return assemblies.SelectMany(s => s.GetTypes()).Where(x => x.Namespace == @namespace && !x.IsNested && x.IsClass && !x.IsAbstract);
+        return FindTypesByExpression(x => x.IsDefined(typeof(T)), assembly, scanReferences);
     }
 
-    public virtual IEnumerable<Type> FindTypesWithAttribute<T>(Assembly assembly = null) where T : Attribute
+    public IEnumerable<Type> FindTypesByExpression(Func<Type, bool> expression, Assembly assembly = null, bool scanReferences = true)
     {
-        if (assembly != null)
-            return assembly.GetTypes().Where(x => x.GetCustomAttribute<T>() != null);
+        assembly ??= Assembly.GetEntryAssembly();
 
-        return FindTypesByExpression(x => x.IsDefined(typeof(T)));
-    }
-
-    public IEnumerable<Type> FindTypesByExpression(Func<Type, bool> expression, Assembly assembly = null)
-    {
-        if (assembly != null)
-            return assembly.GetTypes().Where(expression);
-
-        return AssembliesToSearchFor.SelectMany(sm => sm.GetTypes()).Where(expression);
-    }
-
-    protected IList<Assembly> AssembliesToSearchFor
-    {
-        get
+        if (scanReferences)
         {
-            if (assemblies == null)
-            {
-                lock (lockingObj)
-                {
-                    var _assemblies = Assembly
-                            .GetEntryAssembly()
-                            .GetReferencedAssemblies()
-                            .Select(s => Assembly.Load(s.ToString()))
-                            .Concat(new[] { Assembly.GetEntryAssembly() });
-
-                    if (AppDomain.CurrentDomain.FriendlyName == "testhost") // Test host is not referenced directly as a .dll
-                    {
-                        _assemblies = _assemblies
-                            .Concat(AppDomain.CurrentDomain.GetAssemblies());
-                    }
-                    assemblies = _assemblies.Distinct().ToList();
-                }
-            }
-            return assemblies;
+            return GetAssemblies(assembly).SelectMany(x => x.GetTypes()).Where(expression);
         }
+
+        return assembly.GetTypes().Where(expression);
+    }
+
+    private IEnumerable<Assembly> GetAssemblies(Assembly entryAssembly)
+    {
+        var _assemblies = entryAssembly
+                           .GetReferencedAssemblies()
+                           .Select(s => Assembly.Load(s.ToString()))
+                           .Concat(new[] { entryAssembly });
+
+        if (AppDomain.CurrentDomain.FriendlyName == "testhost") // Test host is not referenced directly as a .dll
+        {
+            _assemblies = _assemblies
+                .Concat(AppDomain.CurrentDomain.GetAssemblies());
+        }
+
+        return _assemblies.Distinct();
     }
 }
