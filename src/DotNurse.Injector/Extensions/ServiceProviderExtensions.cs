@@ -55,7 +55,7 @@ public static class ServiceProviderExtensions
 
     public static void InjectIntoMembers(this IServiceProvider serviceProvider, object instance)
     {
-        var attributeInjector = serviceProvider.GetService<IAttributeInjector>() ?? throw new InvalidOperationException("IAttributeInjector couldn't be resolved from DotNurseServiceProvider.\n\n - Make sure the IServiceProvider is a {typeof(DotNurseServiceProvider).Name}.");
+        var attributeInjector = serviceProvider.GetService<IAttributeInjector>() ?? throw new InvalidOperationException($"IAttributeInjector couldn't be resolved from DotNurseServiceProvider.\n\n - Make sure the IServiceProvider is a {typeof(DotNurseServiceProvider).FullName}.");
 
         attributeInjector.InjectIntoMembers(instance, serviceProvider);
     }
