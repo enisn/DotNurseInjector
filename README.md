@@ -119,7 +119,7 @@ public class BookService
 ```csharp
 public class BookService 
 {
-  [InjectService] private IBookRepository BookRepository { get; private set; }
+  [InjectService] private IBookRepository BookRepository { get; set; }
   [InjectService] private readonly BookManager _bookManager;
   // ...
 }
