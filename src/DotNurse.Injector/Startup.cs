@@ -1,5 +1,7 @@
 ﻿using DotNurse.Injector.Attributes;
+using DotNurse.Injector.Registration;
 using DotNurse.Injector.Services;
+using LazyProxy;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ namespace DotNurse.Injector;
 
 public static class Startup
 {
-    private static ITypeExplorer TypeExplorer { get; } = new DotNurseTypeExplorer();
+    private static DotNurseInjectorContext Context { get; } = new DotNurseInjectorContext();
 
     public static IServiceCollection AddServicesFrom(this IServiceCollection services,
                                                         string @namespace,
@@ -20,7 +22,7 @@ public static class Startup
         var options = new DotNurseInjectorOptions();
         configAction?.Invoke(options);
 
-        var types = TypeExplorer.FindTypesInNamespace(@namespace, options.Assembly);
+        var types = Context.TypeExplorer.FindTypesInNamespace(@namespace, options.Assembly);
 
         services.RegisterTypes(types, defaultLifetime, options);
 
@@ -35,13 +37,14 @@ public static class Startup
     public static IServiceCollection AddServicesByAttributes(
         this IServiceCollection services,
         ServiceLifetime defaultServiceLifetime = ServiceLifetime.Transient,
+        bool useLazyProxy = false,
         Assembly assembly = null)
     {
-        var types = TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
+        var types = Context.TypeExplorer.FindTypesWithAttribute<RegisterAsAttribute>(assembly);
 
         foreach (var type in types)
             foreach (var injectAsAttribute in type.GetCustomAttributes<RegisterAsAttribute>())
-                services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime));
+                services.Add(CreateServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? defaultServiceLifetime, useLazyProxy));
 
         return services;
     }
@@ -55,15 +58,17 @@ public static class Startup
         var options = new DotNurseInjectorOptions();
         configAction?.Invoke(options);
 
-        var types = TypeExplorer.FindTypesByExpression(expression, options.Assembly);
+        var types = Context.TypeExplorer.FindTypesByExpression(expression, options.Assembly);
 
         services.RegisterTypes(types, defaultServiceLifetime, options);
         return services;
     }
 
-    public static IServiceCollection AddDotNurseInjector(this IServiceCollection services)
+    public static IServiceCollection AddDotNurseInjector(this IServiceCollection services, Action<DotNurseInjectorContext> contextAction = null)
     {
-        services.AddSingleton<ITypeExplorer, DotNurseTypeExplorer>();
+        contextAction?.Invoke(Context);
+        services.Add(new ServiceDescriptor(typeof(ITypeExplorer), Context.TypeExplorer.GetType(), ServiceLifetime.Singleton));
+        services.Add(new ServiceDescriptor(typeof(ILazyServiceDescriptorCreator), Context.LazyServiceDescriptorCreator.GetType(), ServiceLifetime.Transient));
         return services;
     }
 
@@ -94,12 +99,12 @@ public static class Startup
 
             var interfaces = type.GetInterfaces();
 
-            services.Add(new ServiceDescriptor(type, type, lifetime));
+            services.Add(CreateServiceDescriptor(type, type, lifetime, options.UseLazyProxy));
 
             if (interfaces.Length == 1)
             {
                 var inheritFrom = interfaces.FirstOrDefault();
-                services.Add(new ServiceDescriptor(inheritFrom, type, lifetime));
+                services.Add(CreateServiceDescriptor(inheritFrom, type, lifetime, options.UseLazyProxy));
 
                 continue;
             }
@@ -109,17 +114,33 @@ public static class Startup
             {
                 foreach (var injectAsAttribute in registerAsAttribute)
                     if (!services.Any(a => a.ServiceType == injectAsAttribute.ServiceType))
-                        services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime));
+                        services.Add(CreateServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime, options.UseLazyProxy));
                 continue;
             }
 
             if (interfaces.Length > 1)
             {
-                services.Add(new ServiceDescriptor(options.SelectInterface(interfaces), type, lifetime));
+                services.Add(CreateServiceDescriptor(options.SelectInterface(interfaces), type, lifetime, options.UseLazyProxy));
                 continue;
             }
         }
 
         return services;
+    }
+
+    private static ServiceDescriptor CreateServiceDescriptor(
+        Type serviceType,
+        Type implementationType,
+        ServiceLifetime lifetime = ServiceLifetime.Transient,
+        bool withLazyProxy = false)
+    {
+        if (withLazyProxy && serviceType.IsAbstract)
+        {
+            return Context.LazyServiceDescriptorCreator.Create(serviceType, implementationType, lifetime);
+        }
+        else
+        {
+            return new ServiceDescriptor(serviceType, implementationType, lifetime);
+        }
     }
 }

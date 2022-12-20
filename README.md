@@ -60,6 +60,25 @@ You can even define lifetimes and expose types from objects via using [[Register
 
 ***
 
+## Using Lazy Proxy
+DotNurse Injector supports lazy proxies for better performance at runtime. When it used, injected object won't be created until first usage of it.
+Visit the github page of [lazy-proxy](https://github.com/servicetitan/lazy-proxy) for better understanding.
+
+
+### Usage
+Configuring `UseLazyProxy` as **true** provides registering services with LazyProxy:
+
+
+```csharp
+services.AddServicesFrom("MyProject.Namespace", ServiceLifetime.Transient, opts => opts.UseLazyProxy = true);
+
+// OR
+
+services.AddServicesByAttributes(useLazyProxy: true);
+```
+
+***
+
 ## Property/Field Injection
 > This section is **optional**. You can still use default Microsoft Dependency Injection and skip this step.
 
