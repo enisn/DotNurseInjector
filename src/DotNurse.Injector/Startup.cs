@@ -80,7 +80,7 @@ public static class Startup
 
         foreach (var type in types)
         {
-            if (type.GetCustomAttribute<IgnoreInjectionAttribute>() != null || type.GetCustomAttribute<DontRegisterAttribute>() != null)
+            if (type.GetCustomAttribute<DontRegisterAttribute>() != null)
                 continue;
 
             if (!options.SelectImplementation(type))
@@ -94,7 +94,10 @@ public static class Startup
 
             var interfaces = type.GetInterfaces();
 
-            services.Add(new ServiceDescriptor(type, type, lifetime));
+            if (options.SelfRegister)
+            {
+                services.Add(new ServiceDescriptor(type, type, lifetime));
+            }
 
             if (interfaces.Length == 1)
             {

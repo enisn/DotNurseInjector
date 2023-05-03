@@ -14,12 +14,6 @@ public class DotNurseInjectorOptions
     /// <summary>
     /// Filter objects by name with given algorithm.
     /// </summary>
-    [Obsolete("This property has a typo. Please use SelectImplementation property instead of this.")]
-    public Func<Type, bool> SelectImplementtion { get => SelectImplementation; set => SelectImplementation = value; }
-
-    /// <summary>
-    /// Filter objects by name with given algorithm.
-    /// </summary>
     public Func<Type, bool> SelectImplementation { get; set; } = _ => true;
 
     /// <summary>
@@ -31,4 +25,9 @@ public class DotNurseInjectorOptions
     /// Filters only objects which inherits directly from this type. For ex.: typeof(BaseRepository<>)
     /// </summary>
     public Type ImplementationBase { get; set; }
+
+    /// <summary>
+    /// Register the type as self too. True by default.
+    /// </summary>
+    public bool SelfRegister { get; set; } = true;
 }
