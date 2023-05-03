@@ -109,7 +109,7 @@ public static class Startup
             {
                 foreach (var injectAsAttribute in registerAsAttribute)
                     if (!services.Any(a => a.ServiceType == injectAsAttribute.ServiceType))
-                        services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType, type, injectAsAttribute.ServiceLifetime ?? lifetime));
+                        services.Add(new ServiceDescriptor(injectAsAttribute.ServiceType ?? type, type, injectAsAttribute.ServiceLifetime ?? lifetime));
                 continue;
             }
 
